@@ -9,39 +9,81 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+// import StarBorder from '@mui/icons-material/StarBorder';
+import {SideNavListItem} from './SideNavListItem'
 
-export const mainListItems = (
+export const SideNavSectionPrimary = () => (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
+    <SideNavListItem 
+      OptionIcon={{icon:<DashboardIcon/>,text: 'Dashboard'}}
+      subList={[
+        {icon: <PeopleIcon/>, text: "Users"}
+      ]}
+    />
     <ListItemButton>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary="Notes" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Recorded Sessions" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Signal Sheets" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Progression" />
     </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <LayersIcon />
+      </ListItemIcon>
+      <ListItemText primary="Tools" />
+    </ListItemButton>
+  </React.Fragment>
+);
+export const SideNavSectionSecondary = () => (
+  <React.Fragment>
+    <ListItemButton>
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Notes" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="Recorded Sessions" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Signal Sheets" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <LayersIcon />
+      </ListItemIcon>
+      <ListItemText primary="Progression" />
+    </ListItemButton>
+    <SideNavListItem 
+      OptionIcon={{icon:<DashboardIcon/>,text: 'Getting Started'}}
+      subList={[
+        {icon: <PeopleIcon/>, text: "Users"}
+      ]}
+    />
   </React.Fragment>
 );
 
@@ -68,5 +110,11 @@ export const secondaryListItems = (
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
     </ListItemButton>
+    <SideNavListItem 
+      OptionIcon={{icon:<DashboardIcon/>,text: 'Getting Started'}}
+      subList={[
+        {icon: <PeopleIcon/>, text: "Users"}
+      ]}
+    />
   </React.Fragment>
 );

@@ -5,10 +5,10 @@ interface TitleProps {
   children?: React.ReactNode;
 }
 
-export default function Title(props: TitleProps) {
+export const Title = ({children}: TitleProps) => {
   return (
-    <Typography component="h2" variant="h6" color="primary" gutterBottom>
-      {props.children}
+    <Typography component="h2" variant="h6" sx={{color: "#E4B337"}} gutterBottom>
+      {children}
     </Typography>
   );
 }
