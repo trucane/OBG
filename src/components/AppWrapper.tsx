@@ -1,39 +1,25 @@
-
+import {ReactNode} from 'react';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { Box, CssBaseline, Toolbar, IconButton, Typography, Badge, Divider, List, Container, Grid, Paper } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Box, CssBaseline, Toolbar, IconButton, Typography, Badge, Divider, List } from '@mui/material';
 import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
-import { SideNavSectionPrimary, SideNavSectionSecondary } from './navs/SideNavSection';
-import { Link } from 'react-router-dom';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
 
+interface AppWrapperProps {
+    children: ReactNode;
+}
 
-function Copyright(props: any) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" to="https://tranquil-pothos-593410.netlify.app/">
-          OBG
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
+const drawerWidth: number = 240;
   
-  const drawerWidth: number = 240;
-  
-  interface AppBarProps extends MuiAppBarProps {
-    open?: boolean;
-  }
-  
-  const AppBar = styled(MuiAppBar, {
+interface AppBarProps extends MuiAppBarProps {
+open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
   })<AppBarProps>(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
@@ -51,6 +37,7 @@ function Copyright(props: any) {
     }),
   }));
   
+
   const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
       '& .MuiDrawer-paper': {
@@ -78,18 +65,18 @@ function Copyright(props: any) {
   );
   
   const mdTheme = createTheme();
+  
 
+  export const AppWrapper = ({children}: AppWrapperProps) => {
 
-
-
-export const MainApp = () => {
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
       setOpen(!open);
     };
-  
+
     return (
-      <ThemeProvider theme={mdTheme}>
+
+        <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: 'flex' }} data-name="app-container">
           <CssBaseline />
           <AppBar position="absolute" open={open} data-name="app-bar">
@@ -119,7 +106,7 @@ export const MainApp = () => {
                 noWrap
                 sx={{ flexGrow: 1 }}
               >
-                Dashboard
+                OBG
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
@@ -161,45 +148,9 @@ export const MainApp = () => {
             }}
           >
             <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Grid container spacing={3}>
-                {/* Chart */}
-                <Grid item xs={12} md={8} lg={9}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: 240,
-                    }}
-                  >
-                    <Chart />
-                  </Paper>
-                </Grid>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: 240,
-                    }}
-                  >
-                    <Deposits />
-                  </Paper>
-                </Grid>
-                {/* Recent Orders */}
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Orders />
-                  </Paper>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ pt: 4 }} />
-            </Container>
+            {children}
           </Box>
         </Box>
       </ThemeProvider>
-    );
+    )
   }

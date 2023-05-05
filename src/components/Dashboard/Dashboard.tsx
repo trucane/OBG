@@ -1,0 +1,66 @@
+import { Container, Grid, Paper, Typography } from '@mui/material';
+import React from 'react';
+import Chart from './Chart/Chart';
+import Deposits from './Deposits';
+import Orders from './Orders';
+import { Link } from 'react-router-dom';
+
+
+
+
+export const DashboardComponent = () => {
+    return(
+        <React.Fragment>
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              <Grid container spacing={3}>
+                {/* Chart */}
+                <Grid item xs={12} md={8} lg={9}>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 240,
+                    }}
+                  >
+                    <Chart />
+                  </Paper>
+                </Grid>
+                {/* Recent Deposits */}
+                <Grid item xs={12} md={4} lg={3}>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 240,
+                    }}
+                  >
+                    <Deposits />
+                  </Paper>
+                </Grid>
+                {/* Recent Orders */}
+                <Grid item xs={12}>
+                  <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Orders />
+                  </Paper>
+                </Grid>
+              </Grid>
+              <Copyright sx={{ pt: 4 }} />
+            </Container>
+        </React.Fragment>
+    )
+}
+
+const Copyright = (props: any) => {
+    return (
+      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+        {'Copyright © '}
+        <Link color="inherit" to="https://tranquil-pothos-593410.netlify.app/">
+          OBG
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  }
