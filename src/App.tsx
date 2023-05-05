@@ -1,7 +1,11 @@
+import * as React from 'react';
 import { MainApp } from './MainApp';
+
 import { Routes, Route } from 'react-router-dom';
 
-export const App = () => {
+
+
+function App() {
   return (
       <div className="app">
           <Routes>
@@ -13,3 +17,5 @@ export const App = () => {
       </div>
   );
 }
+
+export default App;
