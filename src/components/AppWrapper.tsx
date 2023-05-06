@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import {ReactNode, useEffect} from 'react';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -8,7 +8,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from '../utils/Auth/AuthContext';
 
 interface AppWrapperProps {
     children: ReactNode;
@@ -70,10 +71,28 @@ const AppBar = styled(MuiAppBar, {
 
   export const AppWrapper = ({children}: AppWrapperProps) => {
 
+    const {loginUser, logoutUser} = useAuth()
+
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
       setOpen(!open);
     };
+    const {currentUser} = useAuth()
+
+    const handleSignIn = async () => {
+      try {
+        const userAction =  await loginUser()
+      } catch (error) {
+        console.log('error')
+      }
+    }
+    const handlelogout = async () => {
+      try {
+        const userAction = await logoutUser()
+      } catch (error) {
+        console.log('error')
+      }
+    }
 
     return (
 
@@ -88,32 +107,66 @@ const AppBar = styled(MuiAppBar, {
               }}
               data-name="app-tool-bar"
             >
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawer}
-                sx={{
-                  marginRight: '36px',
-                  ...(open && { display: 'none' }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                sx={{ flexGrow: 1}}
-              >
-                <Link to='/' style={{textDecoration:'none', color: "#E4B337"}}>OBG</Link>
-              </Typography>
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              <Box sx={{ flexGrow: 1}}>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={toggleDrawer}
+                  sx={{
+                    marginRight: '36px',
+                    ...(open && { display: 'none' }),
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                >
+                  <Link to='/' style={{textDecoration:'none', color: "#E4B337"}}>OBG</Link>
+                </Typography>
+              </Box>
+              <Box sx={{display:'flex', gap:2, alignItems:"center"}}>
+
+                {
+                  currentUser
+                  ?<Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  onClick={handlelogout}
+                >
+                  Log Out
+                </Typography>
+                :<Typography
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                    onClick={handleSignIn}
+                  >
+                    Sign In
+                  </Typography>
+                }
+                <Typography
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                  >
+                    {currentUser && currentUser.email}
+                  </Typography>
+                <IconButton color="inherit">
+                  <Badge badgeContent={4} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+              </Box>
             </Toolbar>
           </AppBar>
           <Drawer variant="permanent" open={open}>
