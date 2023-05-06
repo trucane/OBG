@@ -1,4 +1,4 @@
-import {ReactNode, useEffect} from 'react';
+import {ReactNode} from 'react';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../utils/Auth/AuthContext';
 
 interface AppWrapperProps {
@@ -81,14 +81,14 @@ const AppBar = styled(MuiAppBar, {
 
     const handleSignIn = async () => {
       try {
-        const userAction =  await loginUser()
+        await loginUser()
       } catch (error) {
         console.log('error')
       }
     }
     const handlelogout = async () => {
       try {
-        const userAction = await logoutUser()
+        await logoutUser()
       } catch (error) {
         console.log('error')
       }
