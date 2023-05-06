@@ -1,119 +1,78 @@
 import * as React from 'react';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
+// import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+// import PeopleIcon from '@mui/icons-material/People';
+// import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LayersIcon from '@mui/icons-material/Layers';
+import SchoolIcon from '@mui/icons-material/School';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import NoteIcon from '@mui/icons-material/Note';
+import UpdateIcon from '@mui/icons-material/Update';
+import CalculateIcon from '@mui/icons-material/Calculate';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import GroupsIcon from '@mui/icons-material/Groups';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import ConstructionIcon from '@mui/icons-material/Construction';
+// import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+// import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
+// import Twitter from '@mui/icons-material/Twitter';
+// import Facebook from '@mui/icons-material/Facebook';
+import Email from '@mui/icons-material/Email';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 // import StarBorder from '@mui/icons-material/StarBorder';
 import {SideNavListItem} from './SideNavListItem'
 
 export const SideNavSectionPrimary = () => (
   <React.Fragment>
     <SideNavListItem 
-      OptionIcon={{icon:<DashboardIcon/>,text: 'Dashboard'}}
+      OptionIcon={{icon:<DashboardIcon/>,text: 'Dashboard', link:'/dashboard'}}
+    />
+    <SideNavListItem 
+      OptionIcon={{icon:<RecentActorsIcon/>,text: 'Contact'}}
       subList={[
-        {icon: <PeopleIcon/>, text: "Users"}
+        {icon: <Email/>, text: "Email"},
+        // {icon: <Twitter/>, text: "Twitter"},
+        // {icon: <Facebook/>, text: "Facebook"},
       ]}
     />
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Notes" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Recorded Sessions" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Signal Sheets" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Progression" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Tools" />
-    </ListItemButton>
   </React.Fragment>
 );
 export const SideNavSectionSecondary = () => (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Notes" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Recorded Sessions" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Signal Sheets" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Progression" />
-    </ListItemButton>
     <SideNavListItem 
-      OptionIcon={{icon:<DashboardIcon/>,text: 'Getting Started'}}
+      OptionIcon={{icon:<AssignmentIcon/>,text: 'Getting Started'}}
       subList={[
-        {icon: <PeopleIcon/>, text: "Users"}
+        {icon: <LayersIcon/>, text: "iGenuis"},
+        {icon: <GroupsIcon/>, text: "FXSWAY"},
+        {icon: <MoneyOffIcon/>, text: "Demo Account"},
+        {icon: <ShowChartIcon/>, text: "MT4"},
+        {icon: <GroupsIcon/>, text: "Crypto Wallet"},
       ]}
     />
-  </React.Fragment>
-);
-
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
     <SideNavListItem 
-      OptionIcon={{icon:<DashboardIcon/>,text: 'Getting Started'}}
+      OptionIcon={{icon:<ConstructionIcon/>,text: 'Tools'}}
       subList={[
-        {icon: <PeopleIcon/>, text: "Users"}
+        {icon: <NoteIcon/>, text: "Notes"},
+        {icon: <CalculateIcon/>, text: "Calculator"},
+        {icon: <UpdateIcon/>, text: "Projection"},
+        {icon: <MenuBookIcon/>, text: "Bookkeeping "},
+      ]}
+    />
+    <SideNavListItem 
+      OptionIcon={{icon:<SchoolIcon/>,text: 'Learning'}}
+      subList={[
+        {icon: <VideoLibraryIcon/>, text: "OBG Sessions"},
+        {icon: <LayersIcon/>, text: "IGenius"},
+      ]}
+    />
+    <SideNavListItem 
+      OptionIcon={{icon:<SchoolIcon/>,text: 'Sites'}}
+      subList={[
+        {icon: <VideoLibraryIcon/>, text: "Tradingview"},
+        {icon: <LayersIcon/>, text: "ForexFactory"},
+        {icon: <LayersIcon/>, text: "FXSWAY"},
       ]}
     />
   </React.Fragment>

@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
+import { Link } from 'react-router-dom';
 
 interface AppWrapperProps {
     children: ReactNode;
@@ -104,9 +105,9 @@ const AppBar = styled(MuiAppBar, {
                 variant="h6"
                 color="inherit"
                 noWrap
-                sx={{ flexGrow: 1 }}
+                sx={{ flexGrow: 1}}
               >
-                OBG
+                <Link to='/' style={{textDecoration:'none', color: "#E4B337"}}>OBG</Link>
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
