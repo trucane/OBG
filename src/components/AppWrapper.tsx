@@ -2,7 +2,7 @@ import {ReactNode} from 'react';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
-import { Box, CssBaseline, Toolbar, IconButton, Typography, Badge, Divider, List } from '@mui/material';
+import { Box, CssBaseline, Toolbar, IconButton, Typography, Badge, Divider, List, MenuItem } from '@mui/material';
 import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -10,6 +10,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../utils/Auth/AuthContext';
+import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
 
 interface AppWrapperProps {
     children: ReactNode;
@@ -74,6 +76,8 @@ const AppBar = styled(MuiAppBar, {
     const {loginUser, logoutUser} = useAuth()
 
     const [open, setOpen] = React.useState(true);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
     const toggleDrawer = () => {
       setOpen(!open);
     };
@@ -89,10 +93,36 @@ const AppBar = styled(MuiAppBar, {
     const handlelogout = async () => {
       try {
         await logoutUser()
+        handleClose()
       } catch (error) {
         console.log('error')
       }
     }
+
+    const convertDisplayName = () => {
+      let v;
+
+      let name = currentUser.displayName.split(' ')
+
+      if(name.length > 1){
+        let firstInitial = name[0].toUpperCase().split('')[0]
+        let secondInitial = name[1].toUpperCase().split('')[0]
+        v = `${firstInitial}${secondInitial}`
+      }else{
+        let firstInitial = name[0].toUpperCase().split('')[0]
+        v = `${firstInitial}`
+      }
+      return v;
+    }
+
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+
 
     return (
 
@@ -133,37 +163,56 @@ const AppBar = styled(MuiAppBar, {
               <Box sx={{display:'flex', gap:2, alignItems:"center"}}>
 
                 {
-                  currentUser
-                  ?<Typography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  noWrap
-                  onClick={handlelogout}
-                >
-                  Log Out
-                </Typography>
-                :<Typography
-                    component="h1"
-                    variant="h6"
-                    color="inherit"
-                    noWrap
-                    onClick={handleSignIn}
-                  >
-                    Sign In
-                  </Typography>
+                  !currentUser && 
+                    <Typography
+                      component="h1"
+                      variant="h6"
+                      color="inherit"
+                      noWrap
+                      onClick={handleSignIn}
+                      style={{cursor: 'pointer'}}
+                    >
+                      Sign In
+                    </Typography>
                 }
-                <Typography
-                    component="h1"
-                    variant="h6"
+                <Box>
+                  <IconButton 
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleMenu}
                     color="inherit"
-                    noWrap
+                    >
+                      {currentUser && <Avatar sx={{bgcolor:"#E4B337"}}>{convertDisplayName()}</Avatar>}
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    sx={{
+                      top: "40px",
+                      // ml: "5px",
+                      width: "400px"
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
                   >
-                    {currentUser && currentUser.email}
-                  </Typography>
+                    {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
+                    <MenuItem onClick={handlelogout}>Log Out</MenuItem>
+                  </Menu>
+                </Box>
                 <IconButton color="inherit">
-                  <Badge badgeContent={4} color="secondary">
-                    <NotificationsIcon />
+                  <Badge badgeContent={4} color="primary" sx={{bgColor:'orange'}}>
+                    <NotificationsIcon/>
                   </Badge>
                 </IconButton>
               </Box>
