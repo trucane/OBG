@@ -1,6 +1,6 @@
 import { TradingViewSection } from './TradingViewSection';
 import { ForexFactorySection } from './ForexFactorySection';
-import { LiveChartsSection } from './LiveChartsSextion';
+import { LiveChartsSection } from './LiveChartsSection';
 import { FxswaySection } from './FxswaySection';
 
 

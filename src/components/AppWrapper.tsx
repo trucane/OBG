@@ -7,7 +7,7 @@ import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
+import { SideNavSectionPassive, SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../utils/Auth/AuthContext';
 import Avatar from '@mui/material/Avatar';
@@ -240,6 +240,8 @@ const AppBar = styled(MuiAppBar, {
               <SideNavSectionPrimary/>
               <Divider sx={{ my: 1 }} />
               <SideNavSectionSecondary/>
+              <Divider sx={{ my: 1 }} />
+              <SideNavSectionPassive/>
             </List>
           </Drawer>
           <Box

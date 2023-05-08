@@ -2,6 +2,7 @@ import * as React from 'react';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 // import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import PeopleIcon from '@mui/icons-material/People';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
@@ -34,14 +35,6 @@ export const SideNavSectionPrimary = () => (
     <SideNavListItem 
       OptionIcon={{icon:<DashboardIcon/>,text: 'Dashboard', link:'/dashboard'}}
     />
-    <SideNavListItem 
-      OptionIcon={{icon:<RecentActorsIcon/>,text: 'Contact'}}
-      subList={[
-        {icon: <Email/>, text: "Email"},
-        // {icon: <Twitter/>, text: "Twitter"},
-        // {icon: <Facebook/>, text: "Facebook"},
-      ]}
-    />
   </React.Fragment>
 );
 export const SideNavSectionSecondary = () => (
@@ -62,7 +55,7 @@ export const SideNavSectionSecondary = () => (
         {icon: <NoteIcon/>, text: "Notes"},
         {icon: <CalculateIcon/>, text: "Calculator"},
         {icon: <UpdateIcon/>, text: "Projection"},
-        {icon: <MenuBookIcon/>, text: "Bookkeeping "},
+        {icon: <MenuBookIcon/>, text: "Bookkeeping"},
       ]}
     />
     <SideNavListItem 
@@ -70,6 +63,7 @@ export const SideNavSectionSecondary = () => (
       subList={[
         {icon: <VideoLibraryIcon/>, text: "OBG Sessions"},
         {icon: <LayersIcon/>, text: "IGenius"},
+        {icon: <AppRegistrationIcon/>, text: "Glossary", link:'/glossary'},
       ]}
     />
     <SideNavListItem 
@@ -83,6 +77,18 @@ export const SideNavSectionSecondary = () => (
     />
     <SideNavListItem 
       OptionIcon={{icon:<CalendarIcon/>,text: 'Calendar'}}
+    />
+  </React.Fragment>
+);
+export const SideNavSectionPassive = () => (
+  <React.Fragment>
+    <SideNavListItem 
+      OptionIcon={{icon:<RecentActorsIcon/>,text: 'Contact'}}
+      subList={[
+        {icon: <Email/>, text: "Email"},
+        // {icon: <Twitter/>, text: "Twitter"},
+        // {icon: <Facebook/>, text: "Facebook"},
+      ]}
     />
   </React.Fragment>
 );
