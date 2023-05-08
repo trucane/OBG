@@ -2,7 +2,10 @@ import * as React from 'react';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 // import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import PeopleIcon from '@mui/icons-material/People';
-// import BarChartIcon from '@mui/icons-material/BarChart';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import CalendarIcon from '@mui/icons-material/CalendarMonth';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import SchoolIcon from '@mui/icons-material/School';
@@ -15,6 +18,8 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import CompareIcon from '@mui/icons-material/Compare';
 // import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 // import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 // import Twitter from '@mui/icons-material/Twitter';
@@ -68,12 +73,16 @@ export const SideNavSectionSecondary = () => (
       ]}
     />
     <SideNavListItem 
-      OptionIcon={{icon:<SchoolIcon/>,text: 'Sites'}}
+      OptionIcon={{icon:<CloudQueueIcon/>,text: 'Sites'}}
       subList={[
-        {icon: <VideoLibraryIcon/>, text: "Tradingview"},
-        {icon: <LayersIcon/>, text: "ForexFactory"},
-        {icon: <LayersIcon/>, text: "FXSWAY"},
+        {icon: <BarChartIcon/>, text: "Trading view", link:'/info/tradingview'},
+        {icon: <NewspaperIcon/>, text: "Forex Factory", link:'/info/forexfactory'},
+        {icon: <CurrencyExchangeIcon/>, text: "FXSWAY", link:'/info/fxsway'},
+        {icon: <CompareIcon/>, text: "Live Charts", link:'/info/livecharts'},
       ]}
+    />
+    <SideNavListItem 
+      OptionIcon={{icon:<CalendarIcon/>,text: 'Calendar'}}
     />
   </React.Fragment>
 );

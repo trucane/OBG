@@ -25,6 +25,9 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
     const navigate = useNavigate() 
 
     const loginUser = () => {
+        provider.setCustomParameters({
+            prompt:'select_account'
+        })
         signInWithPopup(auth, provider).then(value => {
             navigate('/dashboard')
         })
