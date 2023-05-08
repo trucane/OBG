@@ -1,4 +1,3 @@
-import react from 'react';
 import { TradingViewSection } from './TradingViewSection';
 import { ForexFactorySection } from './ForexFactorySection';
 import { LiveChartsSection } from './LiveChartsSextion';
