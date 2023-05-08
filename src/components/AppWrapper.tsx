@@ -137,7 +137,7 @@ const AppBar = styled(MuiAppBar, {
               }}
               data-name="app-tool-bar"
             >
-              <Box sx={{ flexGrow: 1}}>
+              <Box sx={{ flexGrow: 1, display:"flex", alignItems:"center"}}>
                 <IconButton
                   edge="start"
                   color="inherit"
@@ -186,6 +186,14 @@ const AppBar = styled(MuiAppBar, {
                     >
                       {currentUser && <Avatar sx={{bgcolor:"#E4B337"}}>{convertDisplayName()}</Avatar>}
                   </IconButton>
+                  {
+                    currentUser && 
+                    <IconButton color="inherit">
+                      <Badge badgeContent={4} color="primary" sx={{bgColor:'orange'}}>
+                        <NotificationsIcon/>
+                      </Badge>
+                    </IconButton>
+                  }
                   <Menu
                     id="menu-appbar"
                     anchorEl={anchorEl}
@@ -208,13 +216,9 @@ const AppBar = styled(MuiAppBar, {
                   >
                     {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
                     <MenuItem onClick={handlelogout}>Log Out</MenuItem>
+                    <MenuItem>Messages</MenuItem>
                   </Menu>
                 </Box>
-                <IconButton color="inherit">
-                  <Badge badgeContent={4} color="primary" sx={{bgColor:'orange'}}>
-                    <NotificationsIcon/>
-                  </Badge>
-                </IconButton>
               </Box>
             </Toolbar>
           </AppBar>
@@ -251,7 +255,9 @@ const AppBar = styled(MuiAppBar, {
             }}
           >
             <Toolbar />
-            {children}
+            <Box sx={{p:4}}>
+              {children}
+            </Box>
           </Box>
         </Box>
       </ThemeProvider>
