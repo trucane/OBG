@@ -1,15 +1,15 @@
 import { Container, Grid, Paper, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
-import {Chart} from './Chart/Chart';
-import {Deposits} from './Deposits';
-import {Orders} from './Orders';
+import { Chart } from '../../../pages/Dashboard/Chart/Chart';
+import { Deposits } from '../../../pages/Dashboard/Deposits';
+import { Orders } from '../../../pages/Dashboard/Orders';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../utils/Auth/AuthContext'; 
+import { useAuth } from '../../../../utils/Auth/AuthContext';
 
 
 
 
-export const DashboardComponent = () => {
+export const AdminPanel = () => {
   // const location = useLocation()
   const navigate = useNavigate()
 
@@ -25,6 +25,7 @@ export const DashboardComponent = () => {
   }, [currentUser, navigate])
     return(
         <React.Fragment>
+            <div>Admin Panel</div>
           {currentUser && (
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>

@@ -2,6 +2,7 @@ import * as React from 'react';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 // import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import PeopleIcon from '@mui/icons-material/People';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -29,6 +30,7 @@ import Email from '@mui/icons-material/Email';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 // import StarBorder from '@mui/icons-material/StarBorder';
 import {SideNavListItem} from './SideNavListItem'
+
 
 export const SideNavSectionPrimary = () => (
   <React.Fragment>
@@ -79,6 +81,13 @@ export const SideNavSectionPassive = () => (
         // {icon: <Twitter/>, text: "Twitter"},
         // {icon: <Facebook/>, text: "Facebook"},
       ]}
+    />
+  </React.Fragment>
+);
+export const SideNavSectionAdmin = () => (
+  <React.Fragment>
+    <SideNavListItem 
+      OptionIcon={{icon:<AdminPanelSettingsIcon/>,text: 'Admin', link:'/route/protected/admin'}}
     />
   </React.Fragment>
 );

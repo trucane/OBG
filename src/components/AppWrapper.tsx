@@ -7,7 +7,7 @@ import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { SideNavSectionPassive, SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
+import { SideNavSectionPassive, SideNavSectionPrimary, SideNavSectionSecondary, SideNavSectionAdmin } from '../navs/SideNavSection';
 import { Link, useLocation  } from 'react-router-dom';
 import { useAuth } from '../utils/Auth/AuthContext';
 import Avatar from '@mui/material/Avatar';
@@ -285,6 +285,9 @@ const AppBar = styled(MuiAppBar, {
                 <SideNavSectionSecondary/>
                 <Divider sx={{ my: 1 }} />
                 <SideNavSectionPassive/>
+                {currentUser?.role.includes('admin') && (
+                  <SideNavSectionAdmin/>
+                )}
               </List>
             </Drawer>
             )
