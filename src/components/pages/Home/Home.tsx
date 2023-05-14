@@ -27,9 +27,7 @@ export const Home = () => {
     
     useEffect(() => {
 
-        if(currentUser && window.location.pathname === '/'){
-            navigate('/')
-        }
+        
 
 
         // const callUserAction = async () => {

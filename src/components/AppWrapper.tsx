@@ -12,6 +12,7 @@ import { Link, useLocation  } from 'react-router-dom';
 import { useAuth } from '../utils/Auth/AuthContext';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
+import { useNavigate } from 'react-router-dom';
 
 interface AppWrapperProps {
     children: ReactNode;
@@ -73,9 +74,10 @@ const AppBar = styled(MuiAppBar, {
   
 
   export const AppWrapper = ({children}: AppWrapperProps) => {
-
-    const {loginUser, logoutUser} = useAuth()
+    const navigate = useNavigate()
     const location = useLocation()
+
+    const {loginUser, logoutUser, currentUser} = useAuth()
 
     const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -132,7 +134,17 @@ const AppBar = styled(MuiAppBar, {
       //   console.log(false)
   
       // }
-    }, [location.pathname ])
+
+      // console.log('hello')
+      // console.log(currentUser)
+      // console.log(loginCredentials)
+      // console.log(location.pathname)
+
+      if(currentUser && location.pathname === '/'){
+        navigate('/dashboard')
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname])
 
 
     return (

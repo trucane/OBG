@@ -13,7 +13,7 @@ interface Props {
     logoutUser: Function
 }
 
-interface User {
+interface User{
     avatar: string,
     email: string,
     nickName: string,
@@ -43,29 +43,34 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         provider.setCustomParameters({
             prompt:'select_account'
         })
-        signInWithPopup(auth, provider).then(value => {
-            navigate('/dashboard')
-        })
+        signInWithPopup(auth, provider)
+
         auth.onAuthStateChanged((user) => {
             if(user?.uid){
                 getSingleUser(user.uid).then( async (a) => {
 
-                    const userData= {
-                        avatar: user?.photoURL || "",
-                        nickName: user.displayName || "",
-                        email: user.email || "",
-                        phoneNumber: user.phoneNumber || "",
-                        role:['client'],
-                        onBoardStatus:'not complete',
-                        igeniusId:"",
-                        telegram: "",
-                    }
-                    try {
-                            await setDoc(doc(db, "users", user.uid), userData);
-                            setCurrentUser(userData)
-                        
-                    } catch (error) {
-                        
+                    if(a){
+                        setCurrentUser(a as User)
+                    } else{
+                        //create new user
+                        let  userData= {
+                            avatar: user?.photoURL || "",
+                            nickName: user.displayName || "",
+                            email: user.email || "",
+                            phoneNumber: user.phoneNumber || "",
+                            role:['client'],
+                            onBoardStatus:'not complete',
+                            igeniusId:"",
+                            telegram: "",
+                        }
+                        try {
+                                await setDoc(doc(db, "users", user.uid), userData);
+                                setCurrentUser(userData)
+                                
+                            
+                        } catch (error) {
+                            console.log(error)
+                        }
                     }
                 })
             }
@@ -101,8 +106,14 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             setLoading(false)
         })
 
+        if(currentUser){
+            navigate('/dashboard')
+        }
+
+
         return unsubcribeWhenDone
-    },[])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[currentUser])
 
     const value = {
         loginCredentials,
@@ -110,6 +121,8 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         loginUser,
         logoutUser
     }
+
+    // console.log(currentUser)
 
 
     return(
