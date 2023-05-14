@@ -1,5 +1,6 @@
 import firebase from 'firebase/compat/app'
 import {getAuth, GoogleAuthProvider} from 'firebase/auth'
+import {getFirestore} from 'firebase/firestore'
 
 
 const firebaseConfig = {
@@ -15,3 +16,4 @@ const firebaseConfig = {
   export const appApi = firebase.initializeApp(firebaseConfig)
   export const auth = getAuth(appApi)
   export const provider = new GoogleAuthProvider()
+  export const db = getFirestore(appApi)

@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import {ReactNode, useEffect} from 'react';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SideNavSectionPassive, SideNavSectionPrimary, SideNavSectionSecondary } from '../navs/SideNavSection';
-import { Link } from 'react-router-dom';
+import { Link, useLocation  } from 'react-router-dom';
 import { useAuth } from '../utils/Auth/AuthContext';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -33,7 +33,8 @@ const AppBar = styled(MuiAppBar, {
     }),
     ...(open && {
       marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
+      width: window.location.pathname === '/' ? '100%' : `calc(100% - ${drawerWidth}px)`,
+      // width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -74,6 +75,7 @@ const AppBar = styled(MuiAppBar, {
   export const AppWrapper = ({children}: AppWrapperProps) => {
 
     const {loginUser, logoutUser} = useAuth()
+    const location = useLocation()
 
     const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -81,7 +83,7 @@ const AppBar = styled(MuiAppBar, {
     const toggleDrawer = () => {
       setOpen(!open);
     };
-    const {currentUser} = useAuth()
+    const {loginCredentials} = useAuth()
 
     const handleSignIn = async () => {
       try {
@@ -102,7 +104,7 @@ const AppBar = styled(MuiAppBar, {
     const convertDisplayName = () => {
       let v;
 
-      let name = currentUser.displayName.split(' ')
+      let name = loginCredentials.displayName.split(' ')
 
       if(name.length > 1){
         let firstInitial = name[0].toUpperCase().split('')[0]
@@ -122,6 +124,15 @@ const AppBar = styled(MuiAppBar, {
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget);
     };
+
+    useEffect(() => {
+      // if(location.pathname === '/'){
+      //   console.log(true)
+      // }else{
+      //   console.log(false)
+  
+      // }
+    }, [location.pathname ])
 
 
     return (
@@ -157,13 +168,13 @@ const AppBar = styled(MuiAppBar, {
                   color="inherit"
                   noWrap
                 >
-                  <Link to='/' style={{textDecoration:'none', color: "#E4B337"}}>OBG</Link>
+                  <Link to='/' style={{textDecoration:'none', color: "#E4B337"}}>OBG 888</Link>
                 </Typography>
               </Box>
               <Box sx={{display:'flex', gap:2, alignItems:"center"}}>
 
                 {
-                  !currentUser && 
+                  !loginCredentials && window.location.pathname !== '/' && 
                     <Typography
                       component="h1"
                       variant="h6"
@@ -184,10 +195,10 @@ const AppBar = styled(MuiAppBar, {
                     onClick={handleMenu}
                     color="inherit"
                     >
-                      {currentUser && <Avatar sx={{bgcolor:"#E4B337"}}>{convertDisplayName()}</Avatar>}
+                      {loginCredentials && <Avatar sx={{bgcolor:"#E4B337"}}>{convertDisplayName()}</Avatar>}
                   </IconButton>
                   {
-                    currentUser && 
+                    loginCredentials && 
                     <IconButton color="inherit">
                       <Badge badgeContent={4} color="primary" sx={{bgColor:'orange'}}>
                         <NotificationsIcon/>
@@ -222,28 +233,32 @@ const AppBar = styled(MuiAppBar, {
               </Box>
             </Toolbar>
           </AppBar>
-          <Drawer variant="permanent" open={open}>
-            <Toolbar
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                px: [1],
-              }}
-            >
-              <IconButton onClick={toggleDrawer}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </Toolbar>
-            <Divider />
-            <List component="nav">
-              <SideNavSectionPrimary/>
-              <Divider sx={{ my: 1 }} />
-              <SideNavSectionSecondary/>
-              <Divider sx={{ my: 1 }} />
-              <SideNavSectionPassive/>
-            </List>
-          </Drawer>
+          {
+            location.pathname !== '/' && (
+            <Drawer variant="permanent" open={open}>
+              <Toolbar
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  px: [1],
+                }}
+              >
+                <IconButton onClick={toggleDrawer}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <List component="nav">
+                <SideNavSectionPrimary/>
+                <Divider sx={{ my: 1 }} />
+                <SideNavSectionSecondary/>
+                <Divider sx={{ my: 1 }} />
+                <SideNavSectionPassive/>
+              </List>
+            </Drawer>
+            )
+          }
           <Box
             component="main"
             sx={{

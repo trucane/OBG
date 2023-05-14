@@ -1,26 +1,41 @@
 import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, provider } from './firebase';
+import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
+import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { db } from './config/firebase';
 
 
 interface Props {
+    loginCredentials: any,
     currentUser: any,
     loginUser: Function
     logoutUser: Function
 }
 
+interface User {
+    avatar: string,
+    email: string,
+    nickName: string,
+    phoneNumber: string,
+    role:Array<string>,
+    onBoardStatus:string,
+    igeniusId:string,
+    telegram: string,
+}
 
-const AuthContext = createContext<Props>({} as Props);
+
+const ApiContext = createContext<Props>({} as Props);
 
 
 export const useAuth = () => {
-    return useContext(AuthContext)
+    return useContext(ApiContext)
 }
 
 export const AuthProvider = (props: { children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }) => {
 
-    const [currentUser, setCurrentUser] = useState<any>({})
+    const [loginCredentials, setLoginCredentials] = useState<any>({})
+    const [currentUser, setCurrentUser] = useState<User | null>()
     const [loading, setLoading] = useState<boolean>(true)
     const navigate = useNavigate() 
 
@@ -32,7 +47,29 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             navigate('/dashboard')
         })
         auth.onAuthStateChanged((user) => {
-            setCurrentUser(user)
+            if(user?.uid){
+                getSingleUser(user.uid).then( async (a) => {
+
+                    const userData= {
+                        avatar: user?.photoURL || "",
+                        nickName: user.displayName || "",
+                        email: user.email || "",
+                        phoneNumber: user.phoneNumber || "",
+                        role:['client'],
+                        onBoardStatus:'not complete',
+                        igeniusId:"",
+                        telegram: "",
+                    }
+                    try {
+                            await setDoc(doc(db, "users", user.uid), userData);
+                            setCurrentUser(userData)
+                        
+                    } catch (error) {
+                        
+                    }
+                })
+            }
+            setLoginCredentials(user)
         })
     }
     const logoutUser = () => {
@@ -41,13 +78,26 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             navigate('/')
         })
         auth.onAuthStateChanged((user) => {
+            setLoginCredentials(null)
             setCurrentUser(null)
         })
     }
 
+    const getSingleUser = async (id: string) => {
+        const userRef = doc(db, 'users', id)
+        try {
+            const docSnap = await getDoc(userRef);
+                return docSnap.data();
+        } catch(error) {
+            console.log(error)
+        }
+        
+        return null
+    }
+
     useEffect(() => {
         const unsubcribeWhenDone = auth.onAuthStateChanged((user) => {
-            setCurrentUser(user)
+            setLoginCredentials(user)
             setLoading(false)
         })
 
@@ -55,6 +105,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
     },[])
 
     const value = {
+        loginCredentials,
         currentUser,
         loginUser,
         logoutUser
@@ -62,8 +113,8 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
 
     return(
-        <AuthContext.Provider value={value}>
+        <ApiContext.Provider value={value}>
             {!loading && props.children}
-        </AuthContext.Provider>
+        </ApiContext.Provider>
     )
 }

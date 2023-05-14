@@ -57,7 +57,7 @@ const Copyright = (props: any) => {
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
         {'Copyright © '}
         <Link color="inherit" to="https://tranquil-pothos-593410.netlify.app/">
-          OBG
+          OBG 888
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}

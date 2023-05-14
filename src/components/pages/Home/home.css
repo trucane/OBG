@@ -1,0 +1,33 @@
+.home-page{
+
+}
+
+.container{
+    height: 74vh;
+}
+
+.hero-video{
+    width: 100%;
+    height: 80%;
+}
+
+.get-started{
+    text-align: center;
+}
+.get-started .btn{
+    padding: 1.1rem 2.8rem;
+    border-radius: 0.5rem;
+    margin-top: 3rem;
+    font-size: 1.6rem;
+    background: #084B55;
+    border: 1px solid #ffffff;
+    color: #E4B337;
+}
+.get-started .btn:hover{
+   
+    background: white;
+    font-weight: bold;
+    color: #084B55;
+    border: 1px solid #084B55;
+}
+
