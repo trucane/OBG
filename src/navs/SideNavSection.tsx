@@ -7,7 +7,7 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 import CalendarIcon from '@mui/icons-material/CalendarMonth';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
+// import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import SchoolIcon from '@mui/icons-material/School';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
@@ -15,9 +15,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import NoteIcon from '@mui/icons-material/Note';
 import UpdateIcon from '@mui/icons-material/Update';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import GroupsIcon from '@mui/icons-material/Groups';
-import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+// import AssignmentIcon from '@mui/icons-material/Assignment';
+// import GroupsIcon from '@mui/icons-material/Groups';
+// import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import CompareIcon from '@mui/icons-material/Compare';
@@ -39,16 +39,6 @@ export const SideNavSectionPrimary = () => (
 );
 export const SideNavSectionSecondary = () => (
   <React.Fragment>
-    <SideNavListItem 
-      OptionIcon={{icon:<AssignmentIcon/>,text: 'Getting Started'}}
-      subList={[
-        {icon: <LayersIcon/>, text: "iGenuis"},
-        {icon: <GroupsIcon/>, text: "FXSWAY"},
-        {icon: <MoneyOffIcon/>, text: "Demo Account"},
-        {icon: <ShowChartIcon/>, text: "MT4"},
-        {icon: <GroupsIcon/>, text: "Crypto Wallet"},
-      ]}
-    />
     <SideNavListItem 
       OptionIcon={{icon:<ConstructionIcon/>,text: 'Tools'}}
       subList={[

@@ -1,16 +1,20 @@
+
 import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { getDoc, doc, setDoc } from 'firebase/firestore';
+import { getDoc, doc, setDoc, increment  } from 'firebase/firestore';
+// import { updateDoc  } from 'firebase/firestore';
 import { db } from './config/firebase';
 
 
 interface Props {
     loginCredentials: any,
-    currentUser: any,
-    loginUser: Function
-    logoutUser: Function
+    currentUser: User | null | undefined,
+    loginUser: () => void
+    logoutUser: () => void
+    resetCurrentUser: (userId: string) => void
+    updateUserProgression: Function
 }
 
 interface User{
@@ -19,7 +23,7 @@ interface User{
     nickName: string,
     phoneNumber: string,
     role:Array<string>,
-    onBoardStatus:string,
+    onBoardStatus:number,
     igeniusId:string,
     telegram: string,
 }
@@ -35,7 +39,7 @@ export const useAuth = () => {
 export const AuthProvider = (props: { children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }) => {
 
     const [loginCredentials, setLoginCredentials] = useState<any>({})
-    const [currentUser, setCurrentUser] = useState<User | null>()
+    const [currentUser, setCurrentUser] = useState<User | null | undefined>()
     const [loading, setLoading] = useState<boolean>(true)
     const navigate = useNavigate() 
 
@@ -44,6 +48,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             prompt:'select_account'
         })
         signInWithPopup(auth, provider)
+
 
         auth.onAuthStateChanged((user) => {
             if(user?.uid){
@@ -59,13 +64,14 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                             email: user.email || "",
                             phoneNumber: user.phoneNumber || "",
                             role:['client'],
-                            onBoardStatus:'not complete',
+                            onBoardStatus:1,
                             igeniusId:"",
                             telegram: "",
                         }
                         try {
                                 await setDoc(doc(db, "users", user.uid), userData);
                                 setCurrentUser(userData)
+                                navigate('/dashboard')
                                 
                             
                         } catch (error) {
@@ -74,7 +80,6 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                     }
                 })
             }
-            setLoginCredentials(user)
         })
     }
     const logoutUser = () => {
@@ -100,15 +105,30 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         return null
     }
 
+    const updateUserProgression = async (id: string, obj: {location:string, locationValue: string}) => {
+        const userRef = doc(db, 'users', id)
+        await setDoc(userRef, {
+            onBoardStatus: increment(1),
+            [obj.location]: obj.locationValue
+        }, {merge: true})
+        getSingleUser(id).then( async (a) => {
+
+            if(a){
+                setCurrentUser(a as User)}})
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const  resetCurrentUser = (userId: string) => {
+            getSingleUser(userId).then((a) => {
+                setCurrentUser(a as User)
+            })
+    }
+
     useEffect(() => {
         const unsubcribeWhenDone = auth.onAuthStateChanged((user) => {
             setLoginCredentials(user)
             setLoading(false)
         })
-
-        if(currentUser){
-            navigate('/dashboard')
-        }
 
 
         return unsubcribeWhenDone
@@ -119,10 +139,10 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         loginCredentials,
         currentUser,
         loginUser,
-        logoutUser
+        logoutUser,
+        resetCurrentUser,
+        updateUserProgression
     }
-
-    // console.log(currentUser)
 
 
     return(

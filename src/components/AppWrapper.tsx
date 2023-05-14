@@ -77,7 +77,7 @@ const AppBar = styled(MuiAppBar, {
     const navigate = useNavigate()
     const location = useLocation()
 
-    const {loginUser, logoutUser, currentUser} = useAuth()
+    const {loginUser, logoutUser, currentUser, loginCredentials, resetCurrentUser} = useAuth()
 
     const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -85,7 +85,6 @@ const AppBar = styled(MuiAppBar, {
     const toggleDrawer = () => {
       setOpen(!open);
     };
-    const {loginCredentials} = useAuth()
 
     const handleSignIn = async () => {
       try {
@@ -128,6 +127,7 @@ const AppBar = styled(MuiAppBar, {
     };
 
     useEffect(() => {
+      // console.log('hitting appwrapper')
       // if(location.pathname === '/'){
       //   console.log(true)
       // }else{
@@ -140,11 +140,29 @@ const AppBar = styled(MuiAppBar, {
       // console.log(loginCredentials)
       // console.log(location.pathname)
 
+      // console.log(currentUser)
+      // console.log(loginCredentials)
+
       if(currentUser && location.pathname === '/'){
         navigate('/dashboard')
       }
+      if(!currentUser && loginCredentials){
+        console.log('hello')
+        const {uid} = loginCredentials.auth.currentUser
+        resetCurrentUser(uid)
+      }
+
+      // if(loginCredentials){
+      //   console.log('have login credentials')
+      // }else{
+      //   console.log('no login credentials')
+      // }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.pathname])
+    }, [currentUser])
+
+    useEffect(() => {
+
+    }, [])
 
 
     return (

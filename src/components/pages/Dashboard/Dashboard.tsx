@@ -1,16 +1,31 @@
 import { Container, Grid, Paper, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Chart from './Chart/Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../utils/Auth/AuthContext'; 
 
 
 
 
 export const DashboardComponent = () => {
+  // const location = useLocation()
+  const navigate = useNavigate()
+
+  const {currentUser} = useAuth()
+
+
+
+  useEffect(() => {
+    if(currentUser && currentUser.onBoardStatus < 8){
+      navigate('/getting-started')
+    }
+    
+  }, [currentUser, navigate])
     return(
         <React.Fragment>
+          {currentUser && (
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
                 {/* Chart */}
@@ -48,6 +63,7 @@ export const DashboardComponent = () => {
               </Grid>
               <Copyright sx={{ pt: 4 }} />
             </Container>
+          )}
         </React.Fragment>
     )
 }
