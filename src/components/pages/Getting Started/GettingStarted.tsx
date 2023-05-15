@@ -7,10 +7,6 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {StyledEngineProvider} from '@mui/material/styles';
@@ -20,20 +16,16 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import SchoolIcon from '@mui/icons-material/School';
-import Check from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import LinkIcon from '@mui/icons-material/Link';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import WavingHandIcon from '@mui/icons-material/WavingHand';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
-import {gettingStarted, gettingStartedProgressContainer, gettingStartedStepper, gettingStarted_btn, gettingStarted_btn_container} from './getting-started.jsx';
-import Grid from '@mui/material/Grid';
+import {gettingStarted, gettingStartedProgressContainer, gettingStarted_btn, gettingStarted_btn_container} from './getting-started.jsx';
 
 
 type BtnContainerPrps = {
@@ -53,11 +45,6 @@ export const GettingStartedComponent = () => {
     const [igeniusId, setIgeniusId] = React.useState<string>('');
     const [telegramIdInput, setTelegramIdInput] = React.useState<string | null>('');
     const handleClose = () => setOpen(false);
-
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setRecruiterSelection(event.target.value as string);
-    };
 
     const showProgressionStage = () => {
         switch (currentUser?.onBoardStatus) {

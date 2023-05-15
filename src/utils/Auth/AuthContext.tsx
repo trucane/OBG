@@ -3,7 +3,7 @@ import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { getDoc, doc, setDoc, increment, collection, getDocs,  serverTimestamp, FieldValue, Timestamp } from 'firebase/firestore';
+import { getDoc, doc, setDoc, increment, collection, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from './config/firebase';
 
 

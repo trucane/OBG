@@ -15,13 +15,6 @@ interface SingupProps{
 function preventDefault(event: React.MouseEvent) {
   event.preventDefault();
 }
-
-
-const trial = (props: any) => {
-    console.log(props)
-
-    return 'today'
-}
 export const  SignUps: React.FC<SingupProps> = ({users}) =>  {
 
   return (
