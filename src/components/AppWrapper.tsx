@@ -143,7 +143,7 @@ const AppBar = styled(MuiAppBar, {
       // console.log(currentUser)
       // console.log(loginCredentials)
 
-      if(currentUser && location.pathname === '/'){
+      if(currentUser && loginCredentials && location.pathname === '/'){
         if(currentUser.role.includes('admin')){
           navigate('/route/protected/admin')
         }else{

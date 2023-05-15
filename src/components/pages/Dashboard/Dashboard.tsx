@@ -21,8 +21,8 @@ export const DashboardComponent = () => {
     if(currentUser && currentUser.onBoardStatus < 8){
       navigate('/getting-started')
     }
-    
-  }, [currentUser, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser])
     return(
         <React.Fragment>
           {currentUser && (

@@ -19,8 +19,8 @@ export const AdminPanel = () => {
 
   useEffect(() => {
     getAllUsers()
-    
-  }, [getAllUsers])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
     return(
         <React.Fragment>
             <div>Admin Panel</div>

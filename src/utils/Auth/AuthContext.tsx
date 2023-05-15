@@ -3,7 +3,7 @@ import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { getDoc, doc, setDoc, increment, collection, getDocs,   } from 'firebase/firestore';
+import { getDoc, doc, setDoc, increment, collection, getDocs,  serverTimestamp, FieldValue, Timestamp } from 'firebase/firestore';
 import { db } from './config/firebase';
 
 
@@ -30,6 +30,7 @@ export interface User{
     telegram: string,
     recruitedBy?: string
     account_type: string,
+    timestamp: any
 }
 
 
@@ -72,7 +73,8 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                             onBoardStatus:1,
                             igeniusId:"",
                             telegram: "",
-                            account_type:""
+                            account_type:"",
+                            timestamp: Timestamp.now().toDate().toString()
                         }
                         try {
                                 await setDoc(doc(db, "users", user.uid), userData);

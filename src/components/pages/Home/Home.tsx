@@ -60,8 +60,8 @@ export const Home = () => {
         
         // callUserAction()
         // getSingleUser()
-        
-    },[currentUser, navigate])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[currentUser])
     // },[loading, userCollection, userRef])
 
 
