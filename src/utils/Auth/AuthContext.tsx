@@ -3,21 +3,23 @@ import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { getDoc, doc, setDoc, increment  } from 'firebase/firestore';
-// import { updateDoc  } from 'firebase/firestore';
+import { getDoc, doc, setDoc, increment, collection, getDocs,   } from 'firebase/firestore';
 import { db } from './config/firebase';
 
 
 interface Props {
     loginCredentials: any,
     currentUser: User | null | undefined,
+    users: Array<User>
+    loading: boolean
     loginUser: () => void
     logoutUser: () => void
     resetCurrentUser: (userId: string) => void
+    getAllUsers: () => void
     updateUserProgression: Function
 }
 
-interface User{
+export interface User{
     avatar: string,
     email: string,
     nickName: string,
@@ -26,6 +28,8 @@ interface User{
     onBoardStatus:number,
     igeniusId:string,
     telegram: string,
+    recruitedBy?: string
+    account_type: string,
 }
 
 
@@ -40,6 +44,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
     const [loginCredentials, setLoginCredentials] = useState<any>({})
     const [currentUser, setCurrentUser] = useState<User | null | undefined>()
+    const [users, setUsers] = useState<Array<User>>([])
     const [loading, setLoading] = useState<boolean>(true)
     const navigate = useNavigate() 
 
@@ -67,6 +72,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                             onBoardStatus:1,
                             igeniusId:"",
                             telegram: "",
+                            account_type:""
                         }
                         try {
                                 await setDoc(doc(db, "users", user.uid), userData);
@@ -83,13 +89,14 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         })
     }
     const logoutUser = () => {
+        setLoading(true)
         
         signOut(auth).then(value => {
             navigate('/')
         })
         auth.onAuthStateChanged((user) => {
-            setLoginCredentials(null)
             setCurrentUser(null)
+            setLoading(false)
         })
     }
 
@@ -98,6 +105,23 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         try {
             const docSnap = await getDoc(userRef);
                 return docSnap.data();
+        } catch(error) {
+            console.log(error)
+        }
+        
+        return null
+    }
+
+    const getAllUsers = async () => {
+        let usersList: Array<User> = []
+        try {
+            const userCollection = await getDocs(collection(db, "users"));
+            userCollection.forEach( userItem => (
+                usersList.push(userItem.data() as User)
+            ))
+            setUsers(usersList)
+
+            return usersList
         } catch(error) {
             console.log(error)
         }
@@ -119,8 +143,10 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const  resetCurrentUser = (userId: string) => {
+        setLoading(true)
             getSingleUser(userId).then((a) => {
                 setCurrentUser(a as User)
+                setLoading(false)
             })
     }
 
@@ -138,10 +164,13 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
     const value = {
         loginCredentials,
         currentUser,
+        loading,
+        users,
         loginUser,
         logoutUser,
         resetCurrentUser,
-        updateUserProgression
+        updateUserProgression,
+        getAllUsers
     }
 
 

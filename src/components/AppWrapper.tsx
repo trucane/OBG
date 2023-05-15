@@ -77,7 +77,7 @@ const AppBar = styled(MuiAppBar, {
     const navigate = useNavigate()
     const location = useLocation()
 
-    const {loginUser, logoutUser, currentUser, loginCredentials, resetCurrentUser} = useAuth()
+    const {loginUser, logoutUser, currentUser, loginCredentials, resetCurrentUser, loading} = useAuth()
 
     const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -144,21 +144,19 @@ const AppBar = styled(MuiAppBar, {
       // console.log(loginCredentials)
 
       if(currentUser && location.pathname === '/'){
-        navigate('/dashboard')
-      }
-      if(!currentUser && loginCredentials){
-        console.log('hello')
-        const {uid} = loginCredentials.auth.currentUser
-        resetCurrentUser(uid)
+        if(currentUser.role.includes('admin')){
+          navigate('/route/protected/admin')
+        }else{
+          navigate('/dashboard')
+        }
       }
 
-      // if(loginCredentials){
-      //   console.log('have login credentials')
-      // }else{
-      //   console.log('no login credentials')
-      // }
+      if(!loading && !currentUser && loginCredentials){
+        resetCurrentUser(loginCredentials?.auth?.currentUser?.uid || {})
+      }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentUser])
+    }, [currentUser, loginCredentials])
 
     useEffect(() => {
 

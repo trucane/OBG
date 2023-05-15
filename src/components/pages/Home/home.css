@@ -22,6 +22,7 @@
     background: #084B55;
     border: 1px solid #ffffff;
     color: #E4B337;
+    cursor: pointer;
 }
 .get-started .btn:hover{
    

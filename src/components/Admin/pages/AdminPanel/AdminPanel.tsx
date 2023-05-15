@@ -1,9 +1,9 @@
-import { Container, Grid, Paper, Typography } from '@mui/material';
+import { Container, Grid, Paper } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Chart } from '../../../pages/Dashboard/Chart/Chart';
 import { Deposits } from '../../../pages/Dashboard/Deposits';
-import { Orders } from '../../../pages/Dashboard/Orders';
-import { Link, useNavigate } from 'react-router-dom';
+import { SignUps } from './Signups';
+
 import { useAuth } from '../../../../utils/Auth/AuthContext';
 
 
@@ -11,18 +11,16 @@ import { useAuth } from '../../../../utils/Auth/AuthContext';
 
 export const AdminPanel = () => {
   // const location = useLocation()
-  const navigate = useNavigate()
+//   const navigate = useNavigate()
 
-  const {currentUser} = useAuth()
+  const {currentUser, getAllUsers, users} = useAuth()
 
 
 
   useEffect(() => {
-    if(currentUser && currentUser.onBoardStatus < 8){
-      navigate('/getting-started')
-    }
+    getAllUsers()
     
-  }, [currentUser, navigate])
+  }, [getAllUsers])
     return(
         <React.Fragment>
             <div>Admin Panel</div>
@@ -55,29 +53,15 @@ export const AdminPanel = () => {
                     <Deposits />
                   </Paper>
                 </Grid>
-                {/* Recent Orders */}
+                {/* Recent SignUps */}
                 <Grid item xs={12}>
                   <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Orders />
+                    <SignUps users={users}/>
                   </Paper>
                 </Grid>
               </Grid>
-              <Copyright sx={{ pt: 4 }} />
             </Container>
           )}
         </React.Fragment>
     )
 }
-
-const Copyright = (props: any) => {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" to="https://tranquil-pothos-593410.netlify.app/">
-          OBG 888
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
