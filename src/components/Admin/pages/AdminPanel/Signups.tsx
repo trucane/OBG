@@ -39,7 +39,7 @@ export const  SignUps: React.FC<SingupProps> = ({users}) =>  {
                     <TableCell>{row.timestamp}</TableCell>
                     <TableCell>{row.recruitedBy}</TableCell>
                     <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.telegram}</TableCell>
+                    <TableCell>{row.telegramId}</TableCell>
                     <TableCell>{row.igeniusId}</TableCell>
                     <TableCell align="right">{row.account_type}</TableCell>
                     <TableCell sx={{color: row.onBoardStatus !== 8 ? 'red' : 'green', fontWeight:"bold"}}>{row.onBoardStatus !== 8 ? 'In Progress' : "completed"}</TableCell>

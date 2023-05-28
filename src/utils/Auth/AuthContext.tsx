@@ -27,10 +27,16 @@ export interface User{
     role:Array<string>,
     onBoardStatus:number,
     igeniusId:string,
-    telegram: string,
+    telegramId: string,
     recruitedBy?: string
     account_type: string,
     timestamp: any
+    userName: UserName
+}
+
+type UserName = {
+    firstName: string,
+    lastName: string
 }
 
 
@@ -72,9 +78,13 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                             role:['client'],
                             onBoardStatus:1,
                             igeniusId:"",
-                            telegram: "",
+                            telegramId: "",
                             account_type:"",
-                            timestamp: Timestamp.now().toDate().toString()
+                            timestamp: Timestamp.now().toDate().toString(),
+                            userName:{
+                                firstName: "",
+                                lastName: ""
+                            }
                         }
                         try {
                                 await setDoc(doc(db, "users", user.uid), userData);
@@ -90,6 +100,8 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             }
         })
     }
+
+
     const logoutUser = () => {
         setLoading(true)
         
@@ -134,13 +146,17 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
     const updateUserProgression = async (id: string, obj: {location:string, locationValue: string}) => {
         const userRef = doc(db, 'users', id)
         await setDoc(userRef, {
-            onBoardStatus: increment(1),
+            onBoardStatus: obj.location === 'onboardStatus' ? null : increment(1),
             [obj.location]: obj.locationValue
         }, {merge: true})
-        getSingleUser(id).then( async (a) => {
 
+
+
+        getSingleUser(id).then( async (a) => {
             if(a){
-                setCurrentUser(a as User)}})
+                setCurrentUser(a as User)}
+        })
+
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -151,6 +167,10 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                 setLoading(false)
             })
     }
+
+    // const sendAdminAlert = async () => {
+    //     const adminCollection = await getDocs(collection(db, "administration")); 
+    // }
 
     useEffect(() => {
         const unsubcribeWhenDone = auth.onAuthStateChanged((user) => {

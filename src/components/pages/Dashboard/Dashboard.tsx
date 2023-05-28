@@ -3,24 +3,17 @@ import React, { useEffect } from 'react';
 import {Chart} from './Chart/Chart';
 import {Deposits} from './Deposits';
 import {Orders} from './Orders';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../../utils/Auth/AuthContext'; 
 
 
 
 
 export const DashboardComponent = () => {
-  // const location = useLocation()
-  const navigate = useNavigate()
 
   const {currentUser} = useAuth()
 
-
-
   useEffect(() => {
-    if(currentUser && currentUser.onBoardStatus < 8){
-      navigate('/getting-started')
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser])
     return(
