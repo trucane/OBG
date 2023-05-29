@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../../../utils/Auth/AuthContext';
 import { useNavigate } from 'react-router';
-import Backdrop from '@mui/material/Backdrop';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -49,14 +46,11 @@ export const GettingStartedComponent = () => {
 
     const {currentUser, updateUserProgression, loginCredentials, getAllUsers, users, logoutUser, backUserProgression} = useAuth()
     const navigate = useNavigate()
-
-    const [open, setOpen] = React.useState(true);
     const [recruiterSelection, setRecruiterSelection] = React.useState<string | null>('');
     const [igeniusId, setIgeniusId] = React.useState<string>('');
     const [telegramIdInput, setTelegramIdInput] = React.useState<string | null>('');
     const [firstname, setFirstName] = React.useState<string>('');
     const [lastName, setLastName] = React.useState<string>('');
-    const handleClose = () => setOpen(false);
 
     const showProgressionStage = () => {
         switch (currentUser?.onBoardStatus) {
@@ -415,7 +409,6 @@ const OnboardComplete = () => {
             location: 'onboardStatus',
             locationValue: true
         }
-        handleClose()
         updateUserProgression(loginCredentials.uid, obj)
     }
 
