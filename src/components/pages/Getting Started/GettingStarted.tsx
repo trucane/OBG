@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../../../utils/Auth/AuthContext';
 import { useNavigate } from 'react-router';
-import Backdrop from '@mui/material/Backdrop';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -13,6 +10,7 @@ import {StyledEngineProvider} from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
+import CloseIcon from '@mui/icons-material/Close';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import SchoolIcon from '@mui/icons-material/School';
@@ -21,49 +19,61 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import LinkIcon from '@mui/icons-material/Link';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
-import WavingHandIcon from '@mui/icons-material/WavingHand';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import BadgeIcon from '@mui/icons-material/Badge';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import LeakAddIcon from '@mui/icons-material/LeakAdd';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
-import {gettingStarted, gettingStartedProgressContainer, gettingStarted_btn, gettingStarted_btn_container} from './getting-started.jsx';
+import {gettingStarted, gettingStartedProgressContainer, btn, gettingStarted_btn_container, back_btn} from './getting-started.jsx';
+import Grid from '@mui/material/Grid';
+import FxswayVideo from '../../../assets/tutorials/FXSway_Demo_Setup.mp4'
+// import { useTheme } from '@material-ui/core/styles';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import FxswayVideo from 'src/assets/tutorials/FXSway_Demo_Setup.mp4'
 
 
 type BtnContainerPrps = {
     isDisabled?: boolean
     submitAction: () => void
+    backActionID?: string
     confirmation?: boolean
 }
 
 
 export const GettingStartedComponent = () => {
 
-    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, users, logoutUser} = useAuth()
+    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, users, logoutUser, backUserProgression} = useAuth()
     const navigate = useNavigate()
-
-    const [open, setOpen] = React.useState(true);
     const [recruiterSelection, setRecruiterSelection] = React.useState<string | null>('');
     const [igeniusId, setIgeniusId] = React.useState<string>('');
     const [telegramIdInput, setTelegramIdInput] = React.useState<string | null>('');
-    const handleClose = () => setOpen(false);
+    const [firstname, setFirstName] = React.useState<string>('');
+    const [lastName, setLastName] = React.useState<string>('');
 
     const showProgressionStage = () => {
         switch (currentUser?.onBoardStatus) {
             case 1:
-                return telegramId()
-            case 2:
-                return recruiter() 
-            case 3:
                 return igenius()
+            case 2:
+                return addName()
+            case 3:
+                return telegramId()
             case 4:
-                return fxsway()
+                return igId_to_Bio()
             case 5:
-                return mt4Trader()
+                return recruiter() 
             case 6:
-                return linkMT4_to_Fxsway()
+                return fxsway()
             case 7:
-                return addOptionsOn_Mt4() 
+                return mt4Trader()
             case 8:
-                return null
+                return linkMT4_to_Fxsway()
+            case 9:
+                return addOptionsOn_Mt4()
+            case 10:
+                return <OnboardComplete/>
         
             default: return null
         }
@@ -73,17 +83,16 @@ export const GettingStartedComponent = () => {
         const onBoardProgression = () => {
             const obj = {
                 location: 'recruitedBy',
-                locationValue: recruiterSelection
+                locationValue: recruiterSelection ?? "no one"
             }
             updateUserProgression(loginCredentials.uid, obj)
         }
 
         const getRecruits = () => {
-            return users.filter(user => user.email !== currentUser?.email).map(a => a.nickName)
+            return users.filter(user => user.email !== currentUser?.email).filter((a) => a.userName).map(a => (`${a.userName.firstName}, ${a.userName.lastName}`))
         }
     
-        return <div className="igenius" >
-                <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Who recruited you</Typography>
+        return <div className="recruited_by" >
                 <Box sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
                     <Autocomplete
                         onChange={(event, value) => setRecruiterSelection(value)}
@@ -95,8 +104,8 @@ export const GettingStartedComponent = () => {
                         />
                 </Box>
                 <ProgressionBtnCont
-                    isDisabled={recruiterSelection && recruiterSelection.length > 2 ? false : true}
                     submitAction={onBoardProgression}
+                    backActionID={loginCredentials.uid}
                 />
         </div>
     }
@@ -112,7 +121,6 @@ export const GettingStartedComponent = () => {
     
         return(
             <div className="igenius">
-                <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>What is you iGenius #</Typography>
                 <Box sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }}>
                     <TextField id="outlined-basic" label="Example: 1684651" variant="outlined" value={igeniusId} onChange={(event) => setIgeniusId(event.target.value)}/>
                 </Box>
@@ -127,6 +135,33 @@ export const GettingStartedComponent = () => {
     }
 
 
+    const addName = () => {
+        const onBoardProgression = () => {
+            const obj = {
+                location: 'userName',
+                locationValue: {
+                    firstName: firstname,
+                    lastName: lastName
+                }
+            }
+            updateUserProgression(loginCredentials.uid, obj)
+        }
+
+
+       return <div className="add-name-container">
+            <Grid container sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }} gap={2}>
+                <TextField id="add-name-fn" label="First name: " variant="outlined" value={firstname} onChange={(event) => setFirstName(event.target.value)}/>
+                <TextField id="add-name-ln" label="Last name: " variant="outlined" value={lastName} onChange={(event) => setLastName(event.target.value)}/>
+            </Grid>
+            <ProgressionBtnCont
+                submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
+                isDisabled={(firstname.length > 1 && lastName.length > 1) ? false : true}
+            />
+        </div>
+    }
+
+
     const fxsway = () => {
         const onBoardProgression = () => {
             const obj = {
@@ -137,9 +172,12 @@ export const GettingStartedComponent = () => {
         }
     
         return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you set up FXSWAY account?</Typography>
+            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
+                <a href='https://fxsway.com/' aria-label="view currency strength from live charts " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>visit site</a>
+            </Typography>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -154,10 +192,13 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you download MT4 App</Typography>
+        return <div className="progress">
+            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
+                <a href='https://www.metatrader4.com/en' aria-label="metatrader4 trading app to download " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>download</a>
+            </Typography>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -171,10 +212,10 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you link you MT4 trader account to FXWay account?</Typography>
+        return <div className="progress">
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -189,10 +230,28 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Added options on your MT4 trader app?</Typography>
+        return <div className="progress">
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
+                confirmation={true}
+            />
+        </div>
+    }
+
+    const igId_to_Bio = () => {
+        const onBoardProgression = () => {
+            const obj = {
+                location: 'add_id_to_bio',
+                locationValue: true
+            }
+            updateUserProgression(loginCredentials.uid, obj)
+        }
+    
+        return <div className="progress">
+            <ProgressionBtnCont
+                submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -201,32 +260,41 @@ export const GettingStartedComponent = () => {
     const telegramId = () => {
         const onBoardProgression = () => {
             const obj = {
-                location: 'add_mt4_options',
+                location: 'telegramId',
                 locationValue: true
             }
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>What is your Telegram Id?</Typography>
+        return <div className="progress">
             <Box sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
                 <TextField id="outlined-basic" label="Example: .te/my name" variant="outlined" value={telegramIdInput} onChange={(event) => setTelegramIdInput(event.target.value)}/>
             </Box>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 isDisabled={telegramIdInput && telegramIdInput.length > 3 ? false : true}
             />
         </div>
     }
 
-    const ProgressionBtnCont = ({isDisabled, submitAction, confirmation}: BtnContainerPrps) => {
+    const ProgressionBtnCont = ({isDisabled, submitAction, confirmation, backActionID}: BtnContainerPrps) => {
+
+        const backProgression = () => {
+            backUserProgression(loginCredentials.uid)
+        }
+
         return(
-            <Box sx={gettingStarted_btn_container}>
-                <Button onClick={() => submitAction() } title='Next step' variant='contained' color={"success"} sx={gettingStarted_btn} disabled={isDisabled ? true : false} >
-                    {confirmation ? 'Yes': "Next Step"}
+            <Grid container sx={gettingStarted_btn_container}>
+                {backActionID && (
+                    <Button onClick={backProgression} title='Warning this will save your progression and exit out of the onboarding process' variant='contained' sx={{...back_btn, ...btn}}  >
+                        <KeyboardBackspaceIcon/>
+                    </Button>
+                )}
+                <Button onClick={() => submitAction() } title='Next step' variant='contained' sx={{...btn, marginLeft:'auto'}} disabled={isDisabled ? true : false} >
+                    {confirmation ? 'Yes': "Next"}
                 </Button>
-                <Button onClick={logoutUser} title='Warning this will save your progression and exit out of the onboarding process' variant='contained' color={"error"} sx={gettingStarted_btn}  >Save and Exit </Button>
-            </Box>
+            </Grid>
         )
     }
 
@@ -283,15 +351,18 @@ function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
 
   const icons: { [index: string]: React.ReactElement } = {
-    1: <WavingHandIcon />,
-    2: <SupportAgentIcon />,
-    3: <SchoolIcon />,
-    4: <ShowChartIcon />,
-    5: <AccountBalanceIcon />,
-    6: <LinkIcon />,
-    7: <ChecklistRtlIcon />,
-    8: <SettingsIcon />,
+    1: <SchoolIcon/>,
+    2: <BadgeIcon />,
+    3: <TelegramIcon />,
+    4: <LeakAddIcon />,
+    5: <SupportAgentIcon />,
+    6: <AccountBalanceIcon />,
+    7: <ShowChartIcon />,
+    8: <LinkIcon />,
+    9: <ChecklistRtlIcon />,
+    10: <SettingsIcon />,
   };
+//   WavingHandIcon
 
   return (
     <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
@@ -300,18 +371,30 @@ function ColorlibStepIcon(props: StepIconProps) {
   );
 }
 
-const steps = ['Telegram Id',  'Recruited By', 'Register for Igenius', 'Setup FXSWAY account', 'Setup MT4 Trader app', 'Link Demo to MT4', 'Add options list to MT4' ];
+const steps = [
+    'What is you iGenius #',
+    'Add Name',
+    'What is your Telegram Id?', 
+    'Did you add your IGenius Id to your Telegram Bio?',
+    'Who recruited you?',
+    'Did you set up FXSWAY account?',
+    'Did you download MT4 App?',
+    'Did you link you MT4 trader account to FXWay account?',
+    'Added options on your MT4 trader app?',
+    'You have successfully completed the onboarding processs'
+];
 
 type Props = {
     progress: number
 }
+
 const ProgressStepper = ({progress}: Props) =>  {
   return (
-    <Stack sx={{ width: '100%', mb: 4, }} spacing={4}>
+    <Stack spacing={4}>
       <Stepper alternativeLabel activeStep={progress} connector={<ColorlibConnector />}>
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}> <span style={{color:"white"}}>{label}</span></StepLabel>
+            <StepLabel StepIconComponent={ColorlibStepIcon}> <span style={{color:"white"}}></span></StepLabel>
           </Step>
         ))}
       </Stepper>
@@ -321,18 +404,25 @@ const ProgressStepper = ({progress}: Props) =>  {
 
 const OnboardComplete = () => {
 
+    const handleComplete = () => {
+        const obj = {
+            location: 'onboardStatus',
+            locationValue: true
+        }
+        updateUserProgression(loginCredentials.uid, obj)
+    }
+
     return(
         <>
-            <Typography variant="h3" gutterBottom> You have successfully completed the onboarding processs</Typography>
-            <Button onClick={handleClose} title='Submit' variant='contained' color={"primary"} sx={gettingStarted_btn}  >Proceed to dashboard </Button>
+            <Button onClick={handleComplete} title='Submit' variant='contained' color={"primary"}  >Proceed to dashboard </Button>
         </>
         )
 }
 
 
     useEffect(() => {
-        if(currentUser && currentUser.onBoardStatus  === 8){
-            navigate('/dashboard')
+        if(currentUser && currentUser.onBoardStatus  === null){
+            return navigate('/dashboard')
         }
 
         getAllUsers()
@@ -340,37 +430,73 @@ const OnboardComplete = () => {
     }, [])
 
 
+    const showVideo = () => {
+        if(currentUser){
+            if(currentUser.onBoardStatus > 3 && currentUser.onBoardStatus < 8)
+                return FxswayVideo
+            
+        }
+
+        return FxswayVideo
+    }
+
+    // const theme = useTheme();
+
+    // const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+    // const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+
+
 
 
     return( 
         <StyledEngineProvider>
+            <Grid container justifyContent={'center'} alignItems={'center'} sx={gettingStarted}>
 
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                open={open}
-                closeAfterTransition
-                slots={{ backdrop: Backdrop }}
-                slotProps={{
-                    backdrop: {
-                    timeout: 500,
-                    },
-                }}
-            >
+                <Grid item xs={12} md={4}>
 
-            <Fade in={open}>
-                <Box sx={gettingStarted}>
-                    <ProgressStepper progress={(currentUser && currentUser.onBoardStatus) ?  (currentUser.onBoardStatus - 1) : 0} />
-                    <Box sx={gettingStartedProgressContainer}>
-                        { currentUser?.onBoardStatus !== 8
+                    <Grid container  justifyContent={'center'}>
+                        <Grid item mb={1} display={{ xs: "none", md:"flex"}}>
+                        {currentUser && (
 
-                            ? showProgressionStage()
-                            : <OnboardComplete/>
-                        }
-                    </Box>
-                </Box>
-            </Fade>
-        </Modal>
+                            <ProgressStepper progress={
+                                currentUser.onBoardStatus
+                                    ?  (currentUser.onBoardStatus - 1) 
+                                    : 0
+                                } />
+                        )}
+
+                        </Grid>
+                            <Grid item mb={6}>
+
+                            <video
+                                style={{width: '100%', height: '100%'}}
+                                controls
+                            
+                            >
+                                <source src={showVideo()} type='video/mp4'/>
+                            </video>
+                            </Grid>
+                        <Grid item xs={12} mb={12}>
+                            <Grid container sx={gettingStartedProgressContainer}>
+                                {currentUser && (
+
+                                    <Grid container justifyContent={'space-between'} alignItems={'center'}  gap={4}>   
+                                        <Typography variant="h6" gutterBottom sx={{fontWeight:"bold"}}>{steps[currentUser.onBoardStatus - 1]}</Typography>
+                                        <CloseIcon  onClick={logoutUser} sx={{cursor:"pointer"}}/>
+                                    </Grid>
+                                )}
+
+                                
+                                { showProgressionStage() }
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+
+
+                
+            </Grid>
         </StyledEngineProvider>
     )
         
