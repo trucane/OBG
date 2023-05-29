@@ -18,7 +18,7 @@ export const BarComponent = styled(MuiAppBar, {
     }),
     ...(open && {
       marginLeft: drawerWidth,
-      width: window.location.pathname === '/' ||  window.location.pathname === '/getting-started'? '100%' : `calc(100% - ${drawerWidth}px)`,
+      width: window.location.pathname === '/' ||  window.location.pathname === '/getting-started' || window.location.pathname === '/create-account'? '100%' : `calc(100% - ${drawerWidth}px)`,
       // width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,

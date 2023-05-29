@@ -1,14 +1,17 @@
-import { useAuth } from '../../../utils/Auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '../../../utils/Auth/AuthContext';
 import './home.css'
+import { Button } from '@mui/material';
 
 export const Home = () => {
 
-    const {loginUser} = useAuth()
+    // const {loginUser} = useAuth()
+    const navigate = useNavigate()
 
 
-    const handleSignIn = async () => {
-        loginUser()
-    }
+    // const handleSignIn = async () => {
+    //     loginUser()
+    // }
 
     return(
         <div className="home-page">
@@ -21,7 +24,9 @@ export const Home = () => {
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowFullScreen/>
                 <div className="get-started">
-                    <button className="btn" onClick={handleSignIn}> Get Started</button>
+                    <Button className="btn" variant='contained' color='primary' onClick={() => navigate('/create-account')}>
+                        Get Started
+                    </Button>
                 </div>
             </div>
         </div>
