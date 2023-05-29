@@ -1,10 +1,16 @@
 export const gettingStarted = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    minWidth: 400,
-    borderRadius:"8px",
+    height:'100vh',
+    padding: '0rem rem'
+    // display: 'flex',
+    // flexDirection: 'column',
+    // justifyContent: 'center',
+    // alignItems:'center',
+    // background: 'blue'
+    // '&::-webkit-scrollbar': {
+    //     width: '0.4em'
+    //   },
+    // '-ms-overflow-style': 'none',  /* IE and Edge */
+    // 'scrollbar-width': 'none',  /* Firefox */
     // boxShadow: 24,
 }
 export const gettingStartedStepper = {
@@ -22,7 +28,12 @@ export const gettingStarted_btn_container = {
     display:"flex",
     justifyContent: "space-between",
 }
-export const gettingStarted_btn = {
+export const btn = {
     borderRadius:"8px",
-    minWidth: "10rem",
+    width: "8rem",
+    display: 'flex',
+    alignItems:'center'
+}
+export const back_btn = {
+    alignSelf: 'self-end',
 }

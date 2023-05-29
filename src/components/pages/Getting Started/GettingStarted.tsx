@@ -13,6 +13,7 @@ import {StyledEngineProvider} from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
+import CloseIcon from '@mui/icons-material/Close';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import SchoolIcon from '@mui/icons-material/School';
@@ -25,24 +26,28 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import BadgeIcon from '@mui/icons-material/Badge';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import LeakAddIcon from '@mui/icons-material/LeakAdd';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
-import {gettingStarted, gettingStartedProgressContainer, gettingStarted_btn, gettingStarted_btn_container} from './getting-started.jsx';
+import {gettingStarted, gettingStartedProgressContainer, btn, gettingStarted_btn_container, back_btn} from './getting-started.jsx';
 import Grid from '@mui/material/Grid';
 import FxswayVideo from '../../../assets/tutorials/FXSway_Demo_Setup.mp4'
+// import { useTheme } from '@material-ui/core/styles';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 // import FxswayVideo from 'src/assets/tutorials/FXSway_Demo_Setup.mp4'
 
 
 type BtnContainerPrps = {
     isDisabled?: boolean
     submitAction: () => void
+    backActionID?: string
     confirmation?: boolean
 }
 
 
 export const GettingStartedComponent = () => {
 
-    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, users, logoutUser} = useAuth()
+    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, users, logoutUser, backUserProgression} = useAuth()
     const navigate = useNavigate()
 
     const [open, setOpen] = React.useState(true);
@@ -93,8 +98,7 @@ export const GettingStartedComponent = () => {
             return users.filter(user => user.email !== currentUser?.email).filter((a) => a.userName).map(a => (`${a.userName.firstName}, ${a.userName.lastName}`))
         }
     
-        return <div className="igenius" >
-                <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Who recruited you</Typography>
+        return <div className="recruited_by" >
                 <Box sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
                     <Autocomplete
                         onChange={(event, value) => setRecruiterSelection(value)}
@@ -107,6 +111,7 @@ export const GettingStartedComponent = () => {
                 </Box>
                 <ProgressionBtnCont
                     submitAction={onBoardProgression}
+                    backActionID={loginCredentials.uid}
                 />
         </div>
     }
@@ -122,7 +127,6 @@ export const GettingStartedComponent = () => {
     
         return(
             <div className="igenius">
-                <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>What is you iGenius #</Typography>
                 <Box sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }}>
                     <TextField id="outlined-basic" label="Example: 1684651" variant="outlined" value={igeniusId} onChange={(event) => setIgeniusId(event.target.value)}/>
                 </Box>
@@ -151,13 +155,13 @@ export const GettingStartedComponent = () => {
 
 
        return <div className="add-name-container">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Add Name</Typography>
-            <Box sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }}>
+            <Grid container sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }} gap={2}>
                 <TextField id="add-name-fn" label="First name: " variant="outlined" value={firstname} onChange={(event) => setFirstName(event.target.value)}/>
                 <TextField id="add-name-ln" label="Last name: " variant="outlined" value={lastName} onChange={(event) => setLastName(event.target.value)}/>
-            </Box>
+            </Grid>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 isDisabled={(firstname.length > 1 && lastName.length > 1) ? false : true}
             />
         </div>
@@ -174,11 +178,12 @@ export const GettingStartedComponent = () => {
         }
     
         return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you set up FXSWAY account?
+            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
                 <a href='https://fxsway.com/' aria-label="view currency strength from live charts " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>visit site</a>
             </Typography>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -193,12 +198,13 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you download MT4 App?
-                <a href='https://www.metatrader4.com/en' aria-label="view currency strength from live charts " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>download</a>
+        return <div className="progress">
+            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
+                <a href='https://www.metatrader4.com/en' aria-label="metatrader4 trading app to download " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>download</a>
             </Typography>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -212,10 +218,10 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you link you MT4 trader account to FXWay account?</Typography>
+        return <div className="progress">
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -230,10 +236,10 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Added options on your MT4 trader app?</Typography>
+        return <div className="progress">
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -248,10 +254,10 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="add_id_to_bio">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>Did you add your IGenius Id to your Telegram Bio</Typography>
+        return <div className="progress">
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 confirmation={true}
             />
         </div>
@@ -266,26 +272,35 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>What is your Telegram Id?</Typography>
+        return <div className="progress">
             <Box sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
                 <TextField id="outlined-basic" label="Example: .te/my name" variant="outlined" value={telegramIdInput} onChange={(event) => setTelegramIdInput(event.target.value)}/>
             </Box>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
                 isDisabled={telegramIdInput && telegramIdInput.length > 3 ? false : true}
             />
         </div>
     }
 
-    const ProgressionBtnCont = ({isDisabled, submitAction, confirmation}: BtnContainerPrps) => {
+    const ProgressionBtnCont = ({isDisabled, submitAction, confirmation, backActionID}: BtnContainerPrps) => {
+
+        const backProgression = () => {
+            backUserProgression(loginCredentials.uid)
+        }
+
         return(
-            <Box sx={gettingStarted_btn_container}>
-                <Button onClick={logoutUser} title='Warning this will save your progression and exit out of the onboarding process' variant='contained' color={"error"} sx={gettingStarted_btn}  >Save and Exit </Button>
-                <Button onClick={() => submitAction() } title='Next step' variant='contained' color={"success"} sx={gettingStarted_btn} disabled={isDisabled ? true : false} >
-                    {confirmation ? 'Yes': "Next Step"}
+            <Grid container sx={gettingStarted_btn_container}>
+                {backActionID && (
+                    <Button onClick={backProgression} title='Warning this will save your progression and exit out of the onboarding process' variant='contained' sx={{...back_btn, ...btn}}  >
+                        <KeyboardBackspaceIcon/>
+                    </Button>
+                )}
+                <Button onClick={() => submitAction() } title='Next step' variant='contained' sx={{...btn, marginLeft:'auto'}} disabled={isDisabled ? true : false} >
+                    {confirmation ? 'Yes': "Next"}
                 </Button>
-            </Box>
+            </Grid>
         )
     }
 
@@ -362,7 +377,18 @@ function ColorlibStepIcon(props: StepIconProps) {
   );
 }
 
-const steps = ['', '', '',  '', '', '', '', '', '', '' ];
+const steps = [
+    'What is you iGenius #',
+    'Add Name',
+    'What is your Telegram Id?', 
+    'Did you add your IGenius Id to your Telegram Bio?',
+    'Who recruited you?',
+    'Did you set up FXSWAY account?',
+    'Did you download MT4 App?',
+    'Did you link you MT4 trader account to FXWay account?',
+    'Added options on your MT4 trader app?',
+    'You have successfully completed the onboarding processs'
+];
 
 type Props = {
     progress: number
@@ -370,11 +396,11 @@ type Props = {
 
 const ProgressStepper = ({progress}: Props) =>  {
   return (
-    <Stack sx={{ width: '100%', mb: 4, }} spacing={4}>
+    <Stack spacing={4}>
       <Stepper alternativeLabel activeStep={progress} connector={<ColorlibConnector />}>
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}> <span style={{color:"white"}}>{label}</span></StepLabel>
+            <StepLabel StepIconComponent={ColorlibStepIcon}> <span style={{color:"white"}}></span></StepLabel>
           </Step>
         ))}
       </Stepper>
@@ -395,8 +421,7 @@ const OnboardComplete = () => {
 
     return(
         <>
-            <Typography variant="h5" gutterBottom> You have successfully completed the onboarding processs</Typography>
-            <Button onClick={handleComplete} title='Submit' variant='contained' color={"primary"} sx={gettingStarted_btn}  >Proceed to dashboard </Button>
+            <Button onClick={handleComplete} title='Submit' variant='contained' color={"primary"}  >Proceed to dashboard </Button>
         </>
         )
 }
@@ -422,48 +447,63 @@ const OnboardComplete = () => {
         return FxswayVideo
     }
 
+    // const theme = useTheme();
+
+    // const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+    // const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+
 
 
 
     return( 
         <StyledEngineProvider>
+            <Grid container justifyContent={'center'} alignItems={'center'} sx={gettingStarted}>
 
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                open={open}
-                closeAfterTransition
-                slots={{ backdrop: Backdrop }}
-                slotProps={{
-                    backdrop: {
-                    timeout: 500,
-                    },
-                }}
-            >
+                <Grid item xs={12} md={4}>
 
-                <Fade in={open}>
-                    <Box sx={gettingStarted}>
-                        <ProgressStepper progress={
-                            (currentUser && currentUser.onBoardStatus) 
-                                ?  (currentUser.onBoardStatus - 1) 
-                                : 0
-                            } />
-                        <Grid container justifyContent={'center'} sx={{mb:4}}>
+                    <Grid container  justifyContent={'center'}>
+                        <Grid item mb={1} display={{ xs: "none", md:"flex"}}>
+                        {currentUser && (
+
+                            <ProgressStepper progress={
+                                currentUser.onBoardStatus
+                                    ?  (currentUser.onBoardStatus - 1) 
+                                    : 0
+                                } />
+                        )}
+
+                        </Grid>
+                            <Grid item mb={6}>
+
                             <video
-                                style={{width: '400px', height: '100%'}}
+                                style={{width: '100%', height: '100%'}}
                                 controls
                             
                             >
                                 <source src={showVideo()} type='video/mp4'/>
                             </video>
+                            </Grid>
+                        <Grid item xs={12} mb={12}>
+                            <Grid container sx={gettingStartedProgressContainer}>
+                                {currentUser && (
+
+                                    <Grid container justifyContent={'space-between'} alignItems={'center'}  gap={4}>   
+                                        <Typography variant="h6" gutterBottom sx={{fontWeight:"bold"}}>{steps[currentUser.onBoardStatus - 1]}</Typography>
+                                        <CloseIcon  onClick={logoutUser} sx={{cursor:"pointer"}}/>
+                                    </Grid>
+                                )}
+
+                                
+                                { showProgressionStage() }
+                            </Grid>
                         </Grid>
-                        <Box sx={gettingStartedProgressContainer}>
-                            
-                            { showProgressionStage() }
-                        </Box>
-                    </Box>
-                </Fade>
-            </Modal>
+                    </Grid>
+                </Grid>
+
+
+
+                
+            </Grid>
         </StyledEngineProvider>
     )
         

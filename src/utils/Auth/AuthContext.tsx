@@ -17,6 +17,7 @@ interface Props {
     resetCurrentUser: (userId: string) => void
     getAllUsers: () => void
     updateUserProgression: Function
+    backUserProgression: Function
 }
 
 export interface User{
@@ -158,6 +159,20 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         })
 
     }
+    const backUserProgression = async (id: string) => {
+        const userRef = doc(db, 'users', id)
+        await setDoc(userRef, {
+            onBoardStatus:  increment(-1),
+        }, {merge: true})
+
+
+
+        getSingleUser(id).then( async (a) => {
+            if(a){
+                setCurrentUser(a as User)}
+        })
+
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const  resetCurrentUser = (userId: string) => {
@@ -192,6 +207,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         logoutUser,
         resetCurrentUser,
         updateUserProgression,
+        backUserProgression,
         getAllUsers
     }
 
