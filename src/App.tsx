@@ -8,6 +8,7 @@ import { CreateAccountRoute } from './components/RouteComponents/CreateAccountRo
 import { AdminPanelRoute } from './components/RouteComponents/AdminPanelRoute';
 import { AdminProtectedRoute } from './components/Admin/pages/AdminPanel/AdminProtectedRoute';
 import { ErrorPage } from './components/pages/ErrorPage';
+import { LoginRoute } from './components/RouteComponents/LoginRoute';
 import { Routes, Route } from 'react-router-dom';
 
 
@@ -27,6 +28,7 @@ function App() {
                 )} />
               <Route path="/getting-started" element={<GettingStartedRoute />} />
               <Route path="/create-account" element={<CreateAccountRoute />} />
+              <Route path="/login" element={<LoginRoute />} />
               <Route path="/glossary/:name?" element={<GlossaryRoute />} />
               <Route path="/info/:section?" element={<InformationRoute />} />
               <Route path="*" element={<ErrorPage />} />

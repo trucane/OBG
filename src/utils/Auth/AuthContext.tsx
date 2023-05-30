@@ -2,7 +2,7 @@
 import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
-import { signInWithPopup, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getDoc, doc, setDoc, increment, collection, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from './config/firebase';
 
@@ -12,14 +12,13 @@ interface Props {
     currentUser: User | null | undefined,
     users: Array<User>
     loading: boolean
-    openDialogue: boolean
-    errorMessage: string
     handleAlerts: Function
     dialog: DialogProp
     loginUser: () => void
     logoutUser: () => void
     resetCurrentUser: (userId: string) => void
     signUpwithEmail: (email: string, password: string) => void
+    loginWithEmail: (email: string, password: string) => void
     getAllUsers: () => void
     updateUserProgression: Function
     backUserProgression: Function
@@ -70,8 +69,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
     })
     const [users, setUsers] = useState<Array<User>>([])
     const [loading, setLoading] = useState<boolean>(true)
-    const [errorMessage, setErrorMessage] = useState<string>('')
-    const [openDialogue, setOpenDialogue] = useState<boolean>(true)
+  
     const navigate = useNavigate() 
 
     const loginUser = () => {
@@ -120,6 +118,29 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         })
     }
 
+    const loginWithEmail = async (email: string, password: string) => {
+
+
+        try {
+
+            await signInWithEmailAndPassword(auth, email,password ).then().catch((error) => {
+                let code = error.code.split('/')[1]
+
+                if (code === 'wrong-password') {
+                    setDialog({
+                            message: 'Email and Password do not match',
+                            alertType:'error',
+                            open: true
+                        }
+                    )
+                }
+            })
+            
+        } catch (error) {
+            
+        }
+    }
+
     const signUpwithEmail = async (email: string, password: string) => {
 
         try{
@@ -133,8 +154,6 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                             open: true
                         }
                     )
-                    setOpenDialogue(true)
-                    setErrorMessage(' This email Already exist')
                 }
             })
 
@@ -291,9 +310,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         loginCredentials,
         currentUser,
         loading,
-        openDialogue,
         users,
-        errorMessage,
         dialog,
         loginUser,
         handleAlerts,
@@ -302,6 +319,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         updateUserProgression,
         backUserProgression,
         signUpwithEmail,
+        loginWithEmail,
         getAllUsers
     }
 

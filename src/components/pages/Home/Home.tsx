@@ -24,7 +24,7 @@ export const Home = () => {
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowFullScreen/>
                 <div className="get-started">
-                    <Button className="btn" variant='contained' color='primary' onClick={() => navigate('/create-account')}>
+                    <Button className="btn" variant='contained' color='primary' onClick={() => navigate('/login')}>
                         Get Started
                     </Button>
                 </div>

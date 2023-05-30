@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid/Grid';
-import { createAccountStyles } from './create-account';
+import { createLoginStyles } from './login-style';
 import Typography from '@mui/material/Typography/Typography';
 import FormControl from '@mui/material/FormControl/FormControl';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
@@ -14,17 +14,16 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 
 
-export const CreateAccount = () => {
+export const LoginPage = () => {
 
-    const {signUpwithEmail, loginUser} = useAuth()
+    const {loginUser, loginWithEmail} = useAuth()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [reEnterPassword, setReEnterPassword] = useState<string>("")
 
-    const handleSubmitCreateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleEmailLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        signUpwithEmail(email, password)
+        loginWithEmail(email, password)
     }
 
     const handleGoogleCreateAccount = async () => {
@@ -36,9 +35,9 @@ export const CreateAccount = () => {
     }
     
     return (
-        <Grid container sx={createAccountStyles.mainContainer} justifyContent={'center'} >
+        <Grid container sx={createLoginStyles.mainContainer} justifyContent={'center'}>
             <Grid container item xs={12} md={6}>
-                <Grid item xs={12} sx={createAccountStyles.formContainer}>
+                <Grid item xs={12} sx={createLoginStyles.formContainer}>
                     <Grid container>
                         <Grid item xs={12} md={12} lg={6}>
                             <Grid container sx={{bgcolor:'red', color: "white"}} alignItems={'center'}>
@@ -66,37 +65,26 @@ export const CreateAccount = () => {
                       
                     </Grid>
                     </Grid>
-                    <Typography variant='h4'component={'legend'} sx={{mb:5}}>Create Account</Typography>
+                    <Typography variant='h4'component={'legend'} sx={{mb:5}}>Sign In</Typography>
 
-                    <form onSubmit={(event) => handleSubmitCreateAccount(event)}>
-                        <FormControl  required sx={createAccountStyles.formControl}>
+                    <form onSubmit={(event) => handleEmailLogin(event)}>
+                        <FormControl  required sx={createLoginStyles.formControl}>
                             <InputLabel htmlFor="my-email">Email address</InputLabel>
                             <Input id="my-email" aria-describedby="my-helper-text" type={'email'} value={email} onChange={(event) => setEmail(event.target.value)} />
                             <FormHelperText id="my-helper-text">We'll never share your email.</FormHelperText>
                         </FormControl>
-                        <FormControl  required sx={createAccountStyles.formControl}>
-                            <InputLabel htmlFor="my-password" error={password.length < 6}>Password</InputLabel>
-                            <Input id="my-password" aria-describedby="my-helper-password" type="password"  value={password} onChange={(event) => setPassword(event.target.value)}/>
-                            {reEnterPassword !== password && (
-                                <FormHelperText id="my-helper-password">Password must be atleast 6 characters</FormHelperText>
-                            )}
-                        </FormControl>
-                        <FormControl required sx={createAccountStyles.formControl}>
-                            <InputLabel htmlFor="my-password2">Re-enter password</InputLabel>
-                            <Input id="my-password2" aria-describedby="my-helper-repassword" type="password"  error={reEnterPassword !== password} value={reEnterPassword} onChange={(event) => setReEnterPassword(event.target.value)}/>
-                            {reEnterPassword !== password && (
-                                <FormHelperText id="my-helper-repassword">Passwords do not match.</FormHelperText>
-                            )}
+                        <FormControl  required sx={createLoginStyles.formControl}>
+                            <InputLabel htmlFor="my-password">Password</InputLabel>
+                            <Input id="my-password" aria-label="enter password" type="password"  value={password} onChange={(event) => setPassword(event.target.value)}/>
                         </FormControl>
 
-                        <Button type="submit" variant='contained' color='primary' sx={createAccountStyles.btn}>Submit</Button>
+                        <Button type="submit" variant='contained' color='primary' sx={createLoginStyles.btn}>Submit</Button>
                     </form>
                 </Grid>
-                <Grid item xs={12} sx={createAccountStyles.formContainer}>
+                <Grid item xs={12} sx={createLoginStyles.formContainer}>
                     <Grid container>
-
                         <Typography variant='h6'>
-                            Already have an account? <Link to="/login" >Log In</Link>  
+                            Do not have an account? <Link to="/create-account" >Register</Link>
                         </Typography>
                     </Grid>
                 </Grid>

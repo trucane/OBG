@@ -25,7 +25,7 @@ interface AppWrapperProps {
     const navigate = useNavigate()
     const location = useLocation()
 
-    const {loginUser, logoutUser, currentUser, loginCredentials, resetCurrentUser, loading} = useAuth()
+    const {logoutUser, currentUser, loginCredentials, resetCurrentUser, loading} = useAuth()
 
     const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -33,14 +33,6 @@ interface AppWrapperProps {
     const toggleDrawer = () => {
       setOpen(!open);
     };
-
-    const handleSignIn = async () => {
-      try {
-        await loginUser()
-      } catch (error) {
-        console.log('error')
-      }
-    }
     const handlelogout = async () => {
       try {
         await logoutUser()
@@ -149,16 +141,17 @@ interface AppWrapperProps {
 
                 {
                   !loginCredentials && window.location.pathname !== '/' && 
+                  <Link to="/login">
                     <Typography
                       component="h1"
                       variant="h6"
                       color="inherit"
                       noWrap
-                      onClick={handleSignIn}
-                      style={{cursor: 'pointer'}}
+                      style={{ listStyle:'none', color:"white"}}
                     >
                       Sign In
                     </Typography>
+                  </Link>
                 }
                 <Box>
                   <IconButton 
@@ -207,7 +200,12 @@ interface AppWrapperProps {
               </Box>
             </Toolbar>
           </BarComponent>
-          { (location.pathname !== '/getting-started'  && location.pathname !== '/'   && location.pathname !== '/create-account')
+          { (
+              location.pathname !== '/getting-started'  && 
+              location.pathname !== '/'   && 
+              location.pathname !== '/create-account' && 
+              location.pathname !== '/login'
+              )
             && (
             <BarDrawer variant="permanent" open={open}>
               <Toolbar
