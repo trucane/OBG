@@ -10,6 +10,7 @@ import { SideNavSectionPassive, SideNavSectionPrimary, SideNavSectionSecondary, 
 import { Link, useLocation  } from 'react-router-dom';
 import { useAuth } from '../../utils/Auth/AuthContext';
 import Avatar from '@mui/material/Avatar';
+import { ErrorDialogue } from '../common/ErrorDialog';
 import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +25,7 @@ interface AppWrapperProps {
     const navigate = useNavigate()
     const location = useLocation()
 
-    const {loginUser, logoutUser, currentUser, loginCredentials, resetCurrentUser, loading} = useAuth()
+    const {logoutUser, currentUser, loginCredentials, resetCurrentUser, loading} = useAuth()
 
     const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -32,14 +33,6 @@ interface AppWrapperProps {
     const toggleDrawer = () => {
       setOpen(!open);
     };
-
-    const handleSignIn = async () => {
-      try {
-        await loginUser()
-      } catch (error) {
-        console.log('error')
-      }
-    }
     const handlelogout = async () => {
       try {
         await logoutUser()
@@ -50,19 +43,17 @@ interface AppWrapperProps {
     }
 
     const convertDisplayName = () => {
-      let v;
 
-      let name = loginCredentials.displayName.split(' ')
+      let name = currentUser?.userName
+      let firstInitial = name?.firstName.toUpperCase().split('')[0]
+      let secondInitial = name?.lastName.toUpperCase().split('')[0]
+      let v = `${firstInitial}${secondInitial}`
 
-      if(name.length > 1){
-        let firstInitial = name[0].toUpperCase().split('')[0]
-        let secondInitial = name[1].toUpperCase().split('')[0]
-        v = `${firstInitial}${secondInitial}`
-      }else{
-        let firstInitial = name[0].toUpperCase().split('')[0]
-        v = `${firstInitial}`
+      if(name?.firstName){
+        console.log(v)
       }
-      return v;
+
+      return name?.firstName ? v : "";
     }
 
     const handleClose = () => {
@@ -150,16 +141,17 @@ interface AppWrapperProps {
 
                 {
                   !loginCredentials && window.location.pathname !== '/' && 
+                  <Link to="/login">
                     <Typography
                       component="h1"
                       variant="h6"
                       color="inherit"
                       noWrap
-                      onClick={handleSignIn}
-                      style={{cursor: 'pointer'}}
+                      style={{ listStyle:'none', color:"white"}}
                     >
                       Sign In
                     </Typography>
+                  </Link>
                 }
                 <Box>
                   <IconButton 
@@ -208,7 +200,12 @@ interface AppWrapperProps {
               </Box>
             </Toolbar>
           </BarComponent>
-          { (location.pathname !== '/getting-started'  && location.pathname !== '/')
+          { (
+              location.pathname !== '/getting-started'  && 
+              location.pathname !== '/'   && 
+              location.pathname !== '/create-account' && 
+              location.pathname !== '/login'
+              )
             && (
             <BarDrawer variant="permanent" open={open}>
               <Toolbar
@@ -255,6 +252,7 @@ interface AppWrapperProps {
             </Box>
           </Box>
         </Box>
+        <ErrorDialogue />
       </ThemeProvider>
     )
   }

@@ -2,7 +2,7 @@
 import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
-import { signInWithPopup, signOut } from 'firebase/auth';
+import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getDoc, doc, setDoc, increment, collection, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from './config/firebase';
 
@@ -12,9 +12,13 @@ interface Props {
     currentUser: User | null | undefined,
     users: Array<User>
     loading: boolean
+    handleAlerts: Function
+    dialog: DialogProp
     loginUser: () => void
     logoutUser: () => void
     resetCurrentUser: (userId: string) => void
+    signUpwithEmail: (email: string, password: string) => void
+    loginWithEmail: (email: string, password: string) => void
     getAllUsers: () => void
     updateUserProgression: Function
     backUserProgression: Function
@@ -35,6 +39,12 @@ export interface User{
     userName: UserName
 }
 
+export type DialogProp = {
+    alertType: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
+    message: string
+    open: boolean
+}
+
 type UserName = {
     firstName: string,
     lastName: string
@@ -52,8 +62,14 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
     const [loginCredentials, setLoginCredentials] = useState<any>({})
     const [currentUser, setCurrentUser] = useState<User | null | undefined>()
+    const [dialog, setDialog] = useState<DialogProp>({
+        message:"",
+        open: false,
+        alertType: 'info'
+    })
     const [users, setUsers] = useState<Array<User>>([])
     const [loading, setLoading] = useState<boolean>(true)
+  
     const navigate = useNavigate() 
 
     const loginUser = () => {
@@ -98,6 +114,98 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                         }
                     }
                 })
+            }
+        })
+    }
+
+    const loginWithEmail = async (email: string, password: string) => {
+
+
+        try {
+
+            await signInWithEmailAndPassword(auth, email,password ).then().catch((error) => {
+                let code = error.code.split('/')[1]
+
+                if (code === 'wrong-password') {
+                    setDialog({
+                            message: 'Email and Password do not match',
+                            alertType:'error',
+                            open: true
+                        }
+                    )
+                }
+            })
+            
+        } catch (error) {
+            
+        }
+    }
+
+    const signUpwithEmail = async (email: string, password: string) => {
+
+        try{
+            await createUserWithEmailAndPassword(auth, email, password).then().catch((error) => {
+
+                let code = error.code.split('/')[1]
+                if (code === 'email-already-in-use') {
+                    setDialog({
+                            message: 'This email Already exist',
+                            alertType:'error',
+                            open: true
+                        }
+                    )
+                }
+            })
+
+            auth.onAuthStateChanged((user) => {
+                if(user?.uid){
+                    getSingleUser(user.uid).then( async (a) => {
+    
+                        if(a){
+                            setCurrentUser(a as User)
+                        } else{
+                            //create new user
+                            let  userData= {
+                                avatar: "",
+                                nickName: "",
+                                email: user.email || "",
+                                phoneNumber: "",
+                                role:['client'],
+                                onBoardStatus:1,
+                                igeniusId:"",
+                                telegramId: "",
+                                account_type:"",
+                                timestamp: Timestamp.now().toDate().toString(),
+                                userName:{
+                                    firstName: "",
+                                    lastName: ""
+                                }
+                            }
+                            try {
+                                    await setDoc(doc(db, "users", user.uid), userData);
+                                    setCurrentUser(userData)
+                                    navigate('/dashboard')
+                                    
+                                
+                            } catch (error) {
+                                console.log(error)
+                            }
+                        }
+                    })
+                }
+            })
+        }catch(error){
+            console.log(`the error: ${error}`)
+        }
+
+    }
+
+    const handleAlerts = () => {
+        setDialog((prev) => {
+            return{
+                ...prev,
+                message: "",
+                open: !prev.open
             }
         })
     }
@@ -203,11 +311,15 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         currentUser,
         loading,
         users,
+        dialog,
         loginUser,
+        handleAlerts,
         logoutUser,
         resetCurrentUser,
         updateUserProgression,
         backUserProgression,
+        signUpwithEmail,
+        loginWithEmail,
         getAllUsers
     }
 

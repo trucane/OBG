@@ -161,6 +161,27 @@ export const GettingStartedComponent = () => {
         </div>
     }
 
+    const telegramId = () => {
+        const onBoardProgression = () => {
+            const obj = {
+                location: 'telegramId',
+                locationValue: true
+            }
+            updateUserProgression(loginCredentials.uid, obj)
+        }
+    
+        return <div className="progress">
+            <Grid container sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
+                <TextField id="outlined-basic" label="Example: .te/my name" variant="outlined" value={telegramIdInput} onChange={(event) => setTelegramIdInput(event.target.value)}/>
+            </Grid>
+            <ProgressionBtnCont
+                submitAction={onBoardProgression}
+                backActionID={loginCredentials.uid}
+                isDisabled={telegramIdInput && telegramIdInput.length > 3 ? false : true}
+            />
+        </div>
+    }
+
 
     const fxsway = () => {
         const onBoardProgression = () => {
@@ -253,27 +274,6 @@ export const GettingStartedComponent = () => {
                 submitAction={onBoardProgression}
                 backActionID={loginCredentials.uid}
                 confirmation={true}
-            />
-        </div>
-    }
-
-    const telegramId = () => {
-        const onBoardProgression = () => {
-            const obj = {
-                location: 'telegramId',
-                locationValue: true
-            }
-            updateUserProgression(loginCredentials.uid, obj)
-        }
-    
-        return <div className="progress">
-            <Box sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
-                <TextField id="outlined-basic" label="Example: .te/my name" variant="outlined" value={telegramIdInput} onChange={(event) => setTelegramIdInput(event.target.value)}/>
-            </Box>
-            <ProgressionBtnCont
-                submitAction={onBoardProgression}
-                backActionID={loginCredentials.uid}
-                isDisabled={telegramIdInput && telegramIdInput.length > 3 ? false : true}
             />
         </div>
     }
@@ -480,14 +480,22 @@ const OnboardComplete = () => {
                             <Grid container sx={gettingStartedProgressContainer}>
                                 {currentUser && (
 
-                                    <Grid container justifyContent={'space-between'} alignItems={'center'}  gap={4}>   
-                                        <Typography variant="h6" gutterBottom sx={{fontWeight:"bold"}}>{steps[currentUser.onBoardStatus - 1]}</Typography>
-                                        <CloseIcon  onClick={logoutUser} sx={{cursor:"pointer"}}/>
+                                    <Grid container justifyContent={'space-between'} alignItems={'center'} mb={4}> 
+                                        <Grid item xs={10}>
+                                            <Typography variant="h6" sx={{fontWeight:"bold"}}>{steps[currentUser.onBoardStatus - 1]}</Typography>
+                                        </Grid>
+                                        <Grid item xs={2} sx={{textAlign: 'right'}}>
+                                            <CloseIcon  onClick={logoutUser} sx={{cursor:"pointer"}}/>
+                                        </Grid>
                                     </Grid>
                                 )}
 
+                                <Grid item xs={12}>
+
+                                    { showProgressionStage() }
+                                </Grid>
+
                                 
-                                { showProgressionStage() }
                             </Grid>
                         </Grid>
                     </Grid>
