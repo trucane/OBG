@@ -66,7 +66,16 @@ export const useAuth = () => {
     return useContext(ApiContext)
 }
 
+
+const apiDomain = () => {
+    const production = process.env.NODE_ENV === 'production'
+    return production ? 'https://magenta-duckanoo-a800a9.netlify.app' : `http://localhost:${process.env.REACT_APP_PORT}`
+}
+
 export const AuthProvider = (props: { children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }) => {
+
+
+
 
     const [loginCredentials, setLoginCredentials] = useState<any>({})
     const [currentUser, setCurrentUser] = useState<User | null | undefined>(null)
@@ -335,7 +344,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         }
 
         try {
-            await axios.get(`http://localhost:4000/send-text?recipient=+${recipient}&textmessage=${message.textMessage} `)
+            await axios.get(`${apiDomain()}/send-text?recipient=+${recipient}&textmessage=${message.textMessage} `)
             .then()
             .catch((error) => {
                 console.log(error)
