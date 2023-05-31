@@ -44,7 +44,7 @@ type BtnContainerPrps = {
 
 export const GettingStartedComponent = () => {
 
-    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, users, logoutUser, backUserProgression} = useAuth()
+    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, getSMSAdmins, users, logoutUser, backUserProgression} = useAuth()
     const navigate = useNavigate()
     const [recruiterSelection, setRecruiterSelection] = React.useState<string | null>('');
     const [igeniusId, setIgeniusId] = React.useState<string>('');
@@ -187,7 +187,7 @@ export const GettingStartedComponent = () => {
         const onBoardProgression = () => {
             const obj = {
                 location: 'fxsway',
-                locationValue: true
+                locationValue: null
             }
             updateUserProgression(loginCredentials.uid, obj)
         }
@@ -406,8 +406,8 @@ const OnboardComplete = () => {
 
     const handleComplete = () => {
         const obj = {
-            location: 'onboardStatus',
-            locationValue: true
+            location: 'onBoardStatus',
+            locationValue: null
         }
         updateUserProgression(loginCredentials.uid, obj)
     }
@@ -426,6 +426,7 @@ const OnboardComplete = () => {
         }
 
         getAllUsers()
+        getSMSAdmins()
          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getDoc, doc, setDoc, increment, collection, getDocs, Timestamp } from 'firebase/firestore';
+import axios from 'axios';
 import { db } from './config/firebase';
 
 
@@ -13,8 +14,10 @@ interface Props {
     users: Array<User>
     loading: boolean
     handleAlerts: Function
+    smsAdmins: Array<SMSAdmin>
     dialog: DialogProp
     loginUser: () => void
+    getSMSAdmins: () => void
     logoutUser: () => void
     resetCurrentUser: (userId: string) => void
     signUpwithEmail: (email: string, password: string) => void
@@ -45,6 +48,11 @@ export type DialogProp = {
     open: boolean
 }
 
+type SMSAdmin = {
+    name: string,
+    phoneNumber: string
+}
+
 type UserName = {
     firstName: string,
     lastName: string
@@ -61,7 +69,8 @@ export const useAuth = () => {
 export const AuthProvider = (props: { children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }) => {
 
     const [loginCredentials, setLoginCredentials] = useState<any>({})
-    const [currentUser, setCurrentUser] = useState<User | null | undefined>()
+    const [currentUser, setCurrentUser] = useState<User | null | undefined>(null)
+    const [smsAdmins, setSMSAdmins] = useState<Array<SMSAdmin>>([])
     const [dialog, setDialog] = useState<DialogProp>({
         message:"",
         open: false,
@@ -134,6 +143,52 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                         }
                     )
                 }
+                if (code === 'user-not-found') {
+                    setDialog({
+                            message: 'No account registered with that email',
+                            alertType:'error',
+                            open: true
+                        }
+                    )
+                }
+            })
+
+            auth.onAuthStateChanged((user) => {
+                if(user?.uid){
+                    getSingleUser(user.uid).then( async (a) => {
+    
+                        if(a){
+                            setCurrentUser(a as User)
+                        } else{
+                            //create new user
+                            let  userData= {
+                                avatar: "",
+                                nickName: "",
+                                email: user.email || "",
+                                phoneNumber: "",
+                                role:['client'],
+                                onBoardStatus:1,
+                                igeniusId:"",
+                                telegramId: "",
+                                account_type:"",
+                                timestamp: Timestamp.now().toDate().toString(),
+                                userName:{
+                                    firstName: "",
+                                    lastName: ""
+                                }
+                            }
+                            try {
+                                    await setDoc(doc(db, "users", user.uid), userData);
+                                    setCurrentUser(userData)
+                                    navigate('/dashboard')
+                                    
+                                
+                            } catch (error) {
+                                console.log(error)
+                            }
+                        }
+                    })
+                }
             })
             
         } catch (error) {
@@ -149,7 +204,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                 let code = error.code.split('/')[1]
                 if (code === 'email-already-in-use') {
                     setDialog({
-                            message: 'This email Already exist',
+                            message: 'This email already exist please login to your account',
                             alertType:'error',
                             open: true
                         }
@@ -254,10 +309,15 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
     const updateUserProgression = async (id: string, obj: {location:string, locationValue: string}) => {
         const userRef = doc(db, 'users', id)
+        
         await setDoc(userRef, {
-            onBoardStatus: obj.location === 'onboardStatus' ? null : increment(1),
+            onBoardStatus: obj.location === 'onBoardStatus' ? null : increment(1),
             [obj.location]: obj.locationValue
-        }, {merge: true})
+        }, {merge: true}).then(() => {
+            if(obj.location === 'onBoardStatus'){
+                smsAdmins.map(( admin) => sendMessage(admin.phoneNumber))
+            }
+        })
 
 
 
@@ -265,6 +325,24 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             if(a){
                 setCurrentUser(a as User)}
         })
+
+    }
+
+    const sendMessage = async(recipient: string) => {
+        const message = {
+            // recipient: "+12193164600",
+            textMessage:`A new client: ${currentUser?.userName.lastName}, ${currentUser?.userName.firstName} has registered on OBG888.com`
+        }
+
+        try {
+            await axios.get(`http://localhost:4000/send-text?recipient=+${recipient}&textmessage=${message.textMessage} `)
+            .then()
+            .catch((error) => {
+                console.log(error)
+            })
+        } catch (error) {
+            
+        }
 
     }
     const backUserProgression = async (id: string) => {
@@ -291,6 +369,23 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
             })
     }
 
+    const getSMSAdmins = async() => {
+        let list: Array<SMSAdmin> = []
+        try {
+            const adminCollection = await getDocs(collection(db, "adminModerators"));
+            adminCollection.forEach( admin => (
+                list.push(admin.data() as SMSAdmin)
+            ))
+            setSMSAdmins(list)
+
+            return list
+        } catch(error) {
+            console.log(error)
+        }
+        
+        return null
+    }
+
     // const sendAdminAlert = async () => {
     //     const adminCollection = await getDocs(collection(db, "administration")); 
     // }
@@ -311,9 +406,11 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         currentUser,
         loading,
         users,
+        smsAdmins,
         dialog,
         loginUser,
         handleAlerts,
+        getSMSAdmins,
         logoutUser,
         resetCurrentUser,
         updateUserProgression,

@@ -34,12 +34,13 @@ export const LoginPage = () => {
           }
     }
     
+    
     return (
         <Grid container sx={createLoginStyles.mainContainer} justifyContent={'center'}>
             <Grid container item xs={12} md={6}>
                 <Grid item xs={12} sx={createLoginStyles.formContainer}>
                     <Grid container>
-                        <Grid item xs={12} md={12} lg={6}>
+                        <Grid item xs={12} md={12} lg={6} onClick={handleGoogleCreateAccount} sx={{cursor:'pointer'}}>
                             <Grid container sx={{bgcolor:'red', color: "white"}} alignItems={'center'}>
                                 <Grid item  xs={2}sx={{padding: '1rem', borderRight: '1px solid white'}}>
                                     <GoogleIcon />
@@ -50,7 +51,7 @@ export const LoginPage = () => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item xs={12} onClick={handleGoogleCreateAccount}>
+                        <Grid item xs={12}>
                             <Grid container alignItems={'center'} my={2.5}>
                                 <Grid item xs={5.5}>
                                     <hr style={{width: '100%'}}/>
