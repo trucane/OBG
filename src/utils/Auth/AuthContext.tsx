@@ -3,7 +3,8 @@ import React, {createContext, useContext, useEffect, useState,} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, provider } from './config/firebase';
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { getDoc, doc, setDoc, increment, collection, getDocs, Timestamp } from 'firebase/firestore';
+import { getDoc, doc, setDoc, increment, collection, getDocs, Timestamp,  } from 'firebase/firestore';
+import {getStorage, ref, getDownloadURL} from 'firebase/storage'
 import axios from 'axios';
 import { db } from './config/firebase';
 
@@ -12,13 +13,16 @@ interface Props {
     loginCredentials: any,
     currentUser: User | null | undefined,
     users: Array<User>
-    loading: boolean
+    loading: boolean,
+    homePageVideo: any,
     handleAlerts: Function
     smsAdmins: Array<SMSAdmin>
     dialog: DialogProp
     loginUser: () => void
     getSMSAdmins: () => void
     logoutUser: () => void
+    getHomePageVideo: () => void
+    uploadVideoFiles: (fileName: string, file:any) => void
     resetCurrentUser: (userId: string) => void
     signUpwithEmail: (email: string, password: string) => void
     loginWithEmail: (email: string, password: string) => void
@@ -86,9 +90,11 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         alertType: 'info'
     })
     const [users, setUsers] = useState<Array<User>>([])
+    const [homePageVideo, setHomePageVideo] = useState<any>()
     const [loading, setLoading] = useState<boolean>(true)
   
     const navigate = useNavigate() 
+    const storage = getStorage()
 
     const loginUser = () => {
         provider.setCustomParameters({
@@ -205,6 +211,21 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         }
     }
 
+    const getHomePageVideo = async () => {
+        setLoading(true)
+
+        try {
+            getDownloadURL(ref(storage, "videos/guess_call.mp4")).then((url) => {
+                setHomePageVideo(url)
+                setLoading(false)
+            })
+            
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
+    }
+
     const signUpwithEmail = async (email: string, password: string) => {
 
         try{
@@ -316,6 +337,16 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         return null
     }
 
+    const uploadVideoFiles = async (file: any) => {
+
+        try {
+            await setDoc(doc(db, `videos/${file.name}`), file);
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const updateUserProgression = async (id: string, obj: {location:string, locationValue: string}) => {
         const userRef = doc(db, 'users', id)
         
@@ -416,9 +447,11 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         loading,
         users,
         smsAdmins,
+        homePageVideo,
         dialog,
         loginUser,
         handleAlerts,
+        uploadVideoFiles,
         getSMSAdmins,
         logoutUser,
         resetCurrentUser,
@@ -426,6 +459,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
         backUserProgression,
         signUpwithEmail,
         loginWithEmail,
+        getHomePageVideo,
         getAllUsers
     }
 

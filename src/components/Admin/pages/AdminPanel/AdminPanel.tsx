@@ -1,5 +1,5 @@
 import { Container, Grid, Paper } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart } from '../../../pages/Dashboard/Chart/Chart';
 import { Deposits } from '../../../pages/Dashboard/Deposits';
 import { SignUps } from './Signups';
@@ -13,7 +13,28 @@ export const AdminPanel = () => {
   // const location = useLocation()
 //   const navigate = useNavigate()
 
-  const {currentUser, getAllUsers, users} = useAuth()
+  const {currentUser, getAllUsers, users, uploadVideoFiles} = useAuth()
+  const [videoFile, setVideoFile] = useState<any>()
+
+
+  const handleVideoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let file = event.currentTarget.files
+
+    if(file === null) return 
+    
+    // console.log(file[0])
+    
+    setVideoFile(file[0])
+  }
+  
+  const uploadVideo = () => {
+    if(videoFile === null) return 
+
+    // console.log(videoFile)
+    const {name} = videoFile
+    let fileName = name
+    uploadVideoFiles(fileName, videoFile)
+  }
 
 
 
@@ -24,6 +45,10 @@ export const AdminPanel = () => {
     return(
         <React.Fragment>
             <div>Admin Panel</div>
+            <div>
+              <input type='file' onChange={handleVideoChange}/>
+              <button onClick={uploadVideo}>Upload</button>
+            </div>
           {currentUser && (
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
