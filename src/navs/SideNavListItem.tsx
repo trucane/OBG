@@ -27,6 +27,7 @@ type ItemValues = {
     icon: React.ReactElement<SvgIconProps>,
     text: string
     link?: string
+    to?: string
 }
 
 
@@ -54,11 +55,22 @@ export const SideNavListItem = ({OptionIcon, subList, link}: ListItemProps)  => 
                 {subList && subList.map((item, indx) => (
                     <Collapse key={indx} in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <ListItemButton sx={{ pl: 4 }} onClick={() => {if(item.link){handleNavigate(item.link)}}}>
-                                <ListItemIcon>
-                                    {item.icon}
+                            <ListItemButton sx={{ pl: 4 }} onClick={() => {
+                                if(item.link){handleNavigate(item.link)}}}>
+                                 <ListItemIcon>
+                                    { item.to 
+                                    ? <a target='_blank' rel="noreferrer"  aria-label={`link to ${item.text}`} style={{textDecoration:'none', color:"inherit"}} href={item.to}>
+                                    {item.icon}</a>
+                                    : item.icon
+                                }
                                 </ListItemIcon>
-                                <ListItemText primary={item.text} />
+                                <ListItemText>
+                                { item.to 
+                                    ? <a target='_blank' rel="noreferrer"  aria-label={`link to ${item.text}`} style={{textDecoration:'none', color:"inherit"}} href={item.to}>
+                                    {item.text}</a>
+                                    : item.text
+                                }
+                                </ListItemText>
                             </ListItemButton>
                         </List>
                     </Collapse>

@@ -1,7 +1,9 @@
 import {ReactNode, useEffect} from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import { BarComponent, BarDrawer} from './BarComponent';
-import { Box, CssBaseline, Toolbar, IconButton, Typography, Badge, Divider, List, MenuItem } from '@mui/material';
+import { Box, CssBaseline, Toolbar, IconButton, Typography, Badge, Divider, List, MenuItem, Grid } from '@mui/material';
 import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -49,10 +51,6 @@ interface AppWrapperProps {
       let secondInitial = name?.lastName.toUpperCase().split('')[0]
       let v = `${firstInitial}${secondInitial}`
 
-      if(name?.firstName){
-        console.log(v)
-      }
-
       return name?.firstName ? v : "";
     }
 
@@ -65,9 +63,6 @@ interface AppWrapperProps {
     };
 
     useEffect(() => {
-
-      // console.log(currentUser)
-      // console.log(loginCredentials)
 
       // if a user is logged
       if(currentUser && loginCredentials){
@@ -152,6 +147,22 @@ interface AppWrapperProps {
                       Sign In
                     </Typography>
                   </Link>
+                }
+                {
+                  !loginCredentials && (
+                    <Grid container gap={2}>
+                      <Grid item>
+                        <Link to="https://instagram.com/mr.holisticmd" style={{textDecoration:'none', color: "#E4B337"}}>
+                          <InstagramIcon/>
+                        </Link>
+                      </Grid>
+                      <Grid item>
+                        <Link to='https://t.me/MrHolistic888' style={{textDecoration:'none', color: "#E4B337"}}>
+                          <TelegramIcon/>
+                        </Link>
+                      </Grid>
+                    </Grid>
+                  )
                 }
                 <Box>
                   <IconButton 
