@@ -73,8 +73,8 @@ interface AppWrapperProps {
         } 
         
         else{
-          // no longer show home page or getting started page... send to respective dashboards
-          if(location.pathname === '/' || location.pathname === '/getting-started'){
+          // no longer show home page, getting started page, or login page... send to respective dashboards
+          if(location.pathname === '/' || location.pathname === '/getting-started' || location.pathname === '/login'){
             if(currentUser.role.includes('admin')){
               navigate('/route/protected/admin')
             }else{
@@ -92,8 +92,6 @@ interface AppWrapperProps {
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser, loginCredentials])
-
-
 
 
     return (
