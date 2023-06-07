@@ -3,7 +3,7 @@
 export const createLoginStyles = {
     mainContainer:{
         color: 'gray',
-        height: '100vh',
+        // height: '100vh',
     },
     formContainer:{
         background: '#ffffff',

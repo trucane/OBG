@@ -19,11 +19,11 @@ export const BarComponent = styled(MuiAppBar, {
     ...(open && {
       marginLeft: drawerWidth,
       width: 
-      window.location.pathname === '/' 
-      ||  window.location.pathname === '/getting-started' 
-      || window.location.pathname === '/create-account'
-      || window.location.pathname === '/login'
-      ? '100%' : `calc(100% - ${drawerWidth}px)`,
+      window.location.pathname !== '/' 
+      &&  window.location.pathname !== '/getting-started' 
+      && window.location.pathname !== '/create-account'
+      && window.location.pathname !== '/login'
+      ? `calc(100% - ${drawerWidth}px)` : `100%`,
       // width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,

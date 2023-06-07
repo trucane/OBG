@@ -10,6 +10,7 @@ import { AdminProtectedRoute } from './components/Admin/pages/AdminPanel/AdminPr
 import { ErrorPage } from './components/pages/ErrorPage';
 import { LoginRoute } from './components/RouteComponents/LoginRoute';
 import { Routes, Route } from 'react-router-dom';
+import './App.css';
 
 
 

@@ -142,15 +142,15 @@ interface AppWrapperProps {
                       noWrap
                       style={{ listStyle:'none', color:"white"}}
                     >
-                      Sign In
+                      Log In
                     </Typography>
                   </Link>
                 }
                 {
                   !loginCredentials && (
-                    <Grid container gap={2}>
+                    <Grid container gap={2} sx={{lineHeight: "1"}}>
                       <Grid item>
-                        <Link to="https://instagram.com/mr.holisticmd" style={{textDecoration:'none', color: "#E4B337"}}>
+                        <Link to="https://instagram.com/mr.holistic" style={{textDecoration:'none', color: "#E4B337"}}>
                           <InstagramIcon/>
                         </Link>
                       </Grid>
@@ -256,7 +256,12 @@ interface AppWrapperProps {
             }}
           >
             <Toolbar />
-            <Box sx={{p:4}}>
+            <Box sx={{
+              p:4, 
+              // background: '#084B55'
+              background: 'linear-gradient(#084B55 80%, #E4B337)',
+              height: '100vh'
+              }}>
               {children}
             </Box>
           </Box>

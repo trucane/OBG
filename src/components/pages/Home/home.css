@@ -17,19 +17,17 @@
 }
 .get-started .btn{
     padding: 1.1rem 2.8rem;
-    border-radius: 0.5rem;
+    border-radius: 1.4rem;
     margin-top: 3rem;
     font-size: 1.6rem;
-    background: #084B55;
+    background: #ffffff;
+    color: #084B55;
     border: 1px solid #ffffff;
-    color: #E4B337;
     cursor: pointer;
 }
 .get-started .btn:hover{
-   
-    background: white;
     font-weight: bold;
-    color: #084B55;
-    border: 1px solid #084B55;
+    border: 1px solid #E4B337;
+    background: #ffffff;
 }
 

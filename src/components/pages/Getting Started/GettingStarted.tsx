@@ -28,6 +28,7 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 import { StepIconProps } from '@mui/material/StepIcon';
 import {gettingStarted, gettingStartedProgressContainer, btn, gettingStarted_btn_container, back_btn} from './getting-started.jsx';
 import Grid from '@mui/material/Grid';
+import { LinearProgressContainer } from '../../common/LinearProgressContainer';
 import FxswayVideo from '../../../assets/tutorials/FXSway_Demo_Setup.mp4'
 // import { useTheme } from '@material-ui/core/styles';
 // import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -44,7 +45,7 @@ type BtnContainerPrps = {
 
 export const GettingStartedComponent = () => {
 
-    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, getSMSAdmins, users, logoutUser, backUserProgression} = useAuth()
+    const {currentUser, updateUserProgression, loginCredentials, getAllUsers, getSMSAdmins, users, logoutUser, backUserProgression, loading} = useAuth()
     const navigate = useNavigate()
     const [recruiterSelection, setRecruiterSelection] = React.useState<string | null>('');
     const [igeniusId, setIgeniusId] = React.useState<string>('');
@@ -79,36 +80,7 @@ export const GettingStartedComponent = () => {
         }
     }
 
-    const recruiter = () => {
-        const onBoardProgression = () => {
-            const obj = {
-                location: 'recruitedBy',
-                locationValue: recruiterSelection ?? "no one"
-            }
-            updateUserProgression(loginCredentials.uid, obj)
-        }
-
-        const getRecruits = () => {
-            return users.filter(user => user.email !== currentUser?.email).filter((a) => a.userName).map(a => (`${a.userName.firstName}, ${a.userName.lastName}`))
-        }
     
-        return <div className="recruited_by" >
-                <Box sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
-                    <Autocomplete
-                        onChange={(event, value) => setRecruiterSelection(value)}
-                        disablePortal
-                        id="members-list"
-                        options={getRecruits()}
-                        sx={{ width: 300,}}
-                        renderInput={(params) => <TextField {...params} label="Members List" />}
-                        />
-                </Box>
-                <ProgressionBtnCont
-                    submitAction={onBoardProgression}
-                    backActionID={loginCredentials.uid}
-                />
-        </div>
-    }
 
     const igenius = () => {
         const onBoardProgression = () => {
@@ -120,17 +92,21 @@ export const GettingStartedComponent = () => {
         }
     
         return(
-            <div className="igenius">
-                <Box sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }}>
-                    <TextField id="outlined-basic" label="Example: 1684651" variant="outlined" value={igeniusId} onChange={(event) => setIgeniusId(event.target.value)}/>
-                </Box>
+            <Grid container sx={gettingStarted.progressContainer}>
+                <Grid item container xs={12} md={5.5} sx={{mb: 2}}>
+                {/* http://mrholistic888.igenius.biz/  */}
+                    <TextField sx={{width: '100%'}}id="outlined-basic" label="Example: 1684651" variant="outlined" value={igeniusId} onChange={(event) => setIgeniusId(event.target.value)}/>
+                </Grid>
+                <Grid item container xs={12} md={5.5} sx={{mb: 2}}>
+                    <TextField sx={{width: '100%'}}id="outlined-basic" label="Example: 1684651" variant="outlined" value={igeniusId} onChange={(event) => setIgeniusId(event.target.value)}/>
+                </Grid>
 
                 <ProgressionBtnCont
                     isDisabled={igeniusId.length > 4 ? false : true}
                     submitAction={onBoardProgression}
                 />
 
-            </div>
+            </Grid>
         )
     }
 
@@ -148,17 +124,21 @@ export const GettingStartedComponent = () => {
         }
 
 
-       return <div className="add-name-container">
-            <Grid container sx={{ minWidth: 120, margin:"4rem 0", textAlign:"center" }} gap={2}>
-                <TextField id="add-name-fn" label="First name: " variant="outlined" value={firstname} onChange={(event) => setFirstName(event.target.value)}/>
-                <TextField id="add-name-ln" label="Last name: " variant="outlined" value={lastName} onChange={(event) => setLastName(event.target.value)}/>
+       return <Grid container sx={gettingStarted.progressContainer}>
+            <Grid item container sx={{mb: 2}} gap={4} justifyContent={'space-between'}>
+                <Grid item xs={12} md={5.5}>
+                    <TextField sx={{width: '100%'}} id="add-name-fn" label="First name: " variant="outlined" value={firstname} onChange={(event) => setFirstName(event.target.value)}/>
+                </Grid>
+                <Grid item xs={12} md={5.5}>
+                    <TextField sx={{width: '100%'}} id="add-name-ln" label="Last name: " variant="outlined" value={lastName} onChange={(event) => setLastName(event.target.value)}/>
+                </Grid>
             </Grid>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
                 backActionID={loginCredentials.uid}
                 isDisabled={(firstname.length > 1 && lastName.length > 1) ? false : true}
             />
-        </div>
+        </Grid>
     }
 
     const telegramId = () => {
@@ -170,16 +150,52 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="progress">
-            <Grid container sx={{ minWidth: 120, margin:"4rem 0", display:"flex", justifyContent:"center"  }}>
-                <TextField id="outlined-basic" label="Example: .te/my name" variant="outlined" value={telegramIdInput} onChange={(event) => setTelegramIdInput(event.target.value)}/>
+        return <Grid container sx={gettingStarted.progressContainer}>
+            <Grid item container xs={12} md={5.5} sx={{ mb:2}}>
+                <TextField sx={{width: '100%'}} id="outlined-basic" label="Example: .te/my name" variant="outlined" value={telegramIdInput} onChange={(event) => setTelegramIdInput(event.target.value)}/>
             </Grid>
             <ProgressionBtnCont
                 submitAction={onBoardProgression}
                 backActionID={loginCredentials.uid}
                 isDisabled={telegramIdInput && telegramIdInput.length > 3 ? false : true}
             />
-        </div>
+        </Grid>
+    }
+
+    const recruiter = () => {
+        const onBoardProgression = () => {
+            const obj = {
+                location: 'recruitedBy',
+                locationValue: recruiterSelection ?? "no one"
+            }
+            updateUserProgression(loginCredentials.uid, obj)
+        }
+
+        const getRecruits = () => {
+            return users.filter(user => user.email !== currentUser?.email).filter((a) => a.userName).map(a => (`${a.userName.firstName}, ${a.userName.lastName}`))
+        }
+    
+        return (
+            <Grid container sx={gettingStarted.progressContainer}>
+
+                <Grid item container sx={{mb: 2}} gap={4} justifyContent={'space-between'}>
+                    <Grid item xs={12} md={5.5}>
+                        <Autocomplete
+                            onChange={(event, value) => setRecruiterSelection(value)}
+                            disablePortal
+                            id="members-list"
+                            options={getRecruits()}
+                            sx={{ width: '100%', mb:2}}
+                            renderInput={(params) => <TextField {...params} label="Members List" />}
+                            />
+                        </Grid>
+                </Grid>
+                <ProgressionBtnCont
+                    submitAction={onBoardProgression}
+                    backActionID={loginCredentials.uid}
+                />
+            </Grid>
+        )
     }
 
 
@@ -192,16 +208,20 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="igenius">
-            <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
-                <a href='https://fxsway.com/' aria-label="view currency strength from live charts " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>visit site</a>
-            </Typography>
-            <ProgressionBtnCont
-                submitAction={onBoardProgression}
-                backActionID={loginCredentials.uid}
-                confirmation={true}
-            />
-        </div>
+        return (
+            <Grid container sx={gettingStarted.progressContainer}>
+                <Grid item sx={{mb:2}}>
+                    <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
+                        <a href='https://fxsway.com/' aria-label="view currency strength from live charts " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem' }}> Go to FXSWAY</a>
+                    </Typography>
+                </Grid>
+                <ProgressionBtnCont
+                    submitAction={onBoardProgression}
+                    backActionID={loginCredentials.uid}
+                    confirmation={true}
+                />
+            </Grid>
+        )
     }
 
     const mt4Trader = () => {
@@ -213,7 +233,7 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="progress">
+        return <Grid container sx={gettingStarted.progressContainer}>
             <Typography variant="h6" gutterBottom sx={{textAlign: 'center'}}>
                 <a href='https://www.metatrader4.com/en' aria-label="metatrader4 trading app to download " target="_blank" rel="noreferrer" style={{marginLeft: '.5rem'}}>download</a>
             </Typography>
@@ -222,7 +242,7 @@ export const GettingStartedComponent = () => {
                 backActionID={loginCredentials.uid}
                 confirmation={true}
             />
-        </div>
+        </Grid>
     }
     const linkMT4_to_Fxsway = () => {
         const onBoardProgression = () => {
@@ -269,14 +289,17 @@ export const GettingStartedComponent = () => {
             updateUserProgression(loginCredentials.uid, obj)
         }
     
-        return <div className="progress">
-            <ProgressionBtnCont
-                submitAction={onBoardProgression}
-                backActionID={loginCredentials.uid}
-                confirmation={true}
-            />
-        </div>
-    }
+        return (
+            <Grid container sx={gettingStarted.progressContainer}>
+                <Grid item sx={{mt: 2}}>
+                    <ProgressionBtnCont
+                        submitAction={onBoardProgression}
+                        backActionID={loginCredentials.uid}
+                        confirmation={true}
+                    />
+                </Grid>
+            </Grid>
+        )}
 
     const ProgressionBtnCont = ({isDisabled, submitAction, confirmation, backActionID}: BtnContainerPrps) => {
 
@@ -291,7 +314,7 @@ export const GettingStartedComponent = () => {
                         <KeyboardBackspaceIcon/>
                     </Button>
                 )}
-                <Button onClick={() => submitAction() } title='Next step' variant='contained' sx={{...btn, marginLeft:'auto'}} disabled={isDisabled ? true : false} >
+                <Button onClick={() => submitAction() } title='Next step' variant='contained' sx={{...btn,  ...btn.nextBtn,  marginLeft:'auto'}} disabled={isDisabled ? true : false} >
                     {confirmation ? 'Yes': "Next"}
                 </Button>
             </Grid>
@@ -453,58 +476,58 @@ const OnboardComplete = () => {
         <StyledEngineProvider>
             <Grid container justifyContent={'center'} alignItems={'center'} sx={gettingStarted}>
 
-                <Grid item xs={12} md={4}>
+                {loading && !currentUser && (
+                    <LinearProgressContainer/>
+                )}
 
-                    <Grid container  justifyContent={'center'}>
-                        <Grid item mb={1} display={{ xs: "none", md:"flex"}}>
-                        {currentUser && (
+                {!loading && currentUser && (
 
-                            <ProgressStepper progress={
-                                currentUser.onBoardStatus
-                                    ?  (currentUser.onBoardStatus - 1) 
-                                    : 0
-                                } />
-                        )}
+                    <Grid item xs={12} md={4}>
+                        <Grid container  justifyContent={'center'}>
+                            <Grid item mb={1} display={{ xs: "none", md:"flex"}}>
 
-                        </Grid>
+                                <ProgressStepper progress={
+                                    currentUser.onBoardStatus
+                                        ?  (currentUser.onBoardStatus - 1) 
+                                        : 0
+                                    }
+                                />
+
+                            </Grid>
                             <Grid item mb={6}>
 
-                            <video
-                                style={{width: '100%', height: '100%'}}
-                                controls
-                            
-                            >
-                                <source src={showVideo()} type='video/mp4'/>
-                            </video>
+                                <video
+                                    style={{width: '100%', height: '100%'}}
+                                    controls
+                                
+                                >
+                                    <source src={showVideo()} type='video/mp4'/>
+                                </video>
                             </Grid>
-                        <Grid item xs={12} mb={12}>
-                            <Grid container sx={gettingStartedProgressContainer}>
-                                {currentUser && (
-
-                                    <Grid container justifyContent={'space-between'} alignItems={'center'} mb={4}> 
-                                        <Grid item xs={10}>
-                                            <Typography variant="h6" sx={{fontWeight:"bold"}}>{steps[currentUser.onBoardStatus - 1]}</Typography>
-                                        </Grid>
-                                        <Grid item xs={2} sx={{textAlign: 'right'}}>
-                                            <CloseIcon  onClick={logoutUser} sx={{cursor:"pointer"}}/>
+                            <Grid item xs={12} mb={12}>
+                                <Grid container sx={gettingStartedProgressContainer}>
+                                    <Grid item xs={12} sx={{marginBottom:"3rem"}}>
+                                        <Grid container sx={gettingStartedProgressContainer.buffer} alignItems={'center'}> 
+                                            <Grid item xs={10}>
+                                                <Typography variant="h6" sx={gettingStartedProgressContainer.buffer.text}>{steps[currentUser.onBoardStatus - 1]}</Typography>
+                                            </Grid>
+                                            <Grid item xs={2} sx={{textAlign: 'right'}}>
+                                                <CloseIcon  onClick={logoutUser} sx={{cursor:"pointer"}}/>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
-                                )}
 
-                                <Grid item xs={12}>
+                                    <Grid item xs={12}>
 
-                                    { showProgressionStage() }
+                                        { showProgressionStage() }
+                                    </Grid>
+ 
                                 </Grid>
-
-                                
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-
-
-
-                
+                )}
+   
             </Grid>
         </StyledEngineProvider>
     )

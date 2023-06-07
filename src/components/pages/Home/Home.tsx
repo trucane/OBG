@@ -51,7 +51,7 @@ export const Home = () => {
                     <Grid item xs={12}>
                         <Grid container justifyContent={'center'} className={'get-started'}>
 
-                            <Button className="btn" variant='contained' color='primary' onClick={() => navigate('/login')}>
+                            <Button className="btn" variant='contained' onClick={() => navigate('/login')}>
                                 Get Started
                             </Button>
                    

@@ -143,6 +143,7 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
     }
 
     const loginWithEmail = async (email: string, password: string) => {
+        setLoading(true)
 
 
         try {
@@ -166,14 +167,18 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                         }
                     )
                 }
+
+                setLoading(false)
             })
 
             auth.onAuthStateChanged((user) => {
                 if(user?.uid){
+                    setLoading(true)
                     getSingleUser(user.uid).then( async (a) => {
     
                         if(a){
                             setCurrentUser(a as User)
+                            setLoading(false)
                         } else{
                             //create new user
                             let  userData= {
@@ -196,9 +201,11 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                                     await setDoc(doc(db, "users", user.uid), userData);
                                     setCurrentUser(userData)
                                     navigate('/dashboard')
+                                    setLoading(false)
                                     
                                 
                             } catch (error) {
+                                setLoading(false)
                                 console.log(error)
                             }
                         }
@@ -228,8 +235,12 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
     const signUpwithEmail = async (email: string, password: string) => {
 
+        setLoading(true)
+
         try{
             await createUserWithEmailAndPassword(auth, email, password).then().catch((error) => {
+
+                setLoading(false)
 
                 let code = error.code.split('/')[1]
                 if (code === 'email-already-in-use') {
@@ -244,10 +255,12 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
 
             auth.onAuthStateChanged((user) => {
                 if(user?.uid){
+                    setLoading(true)
                     getSingleUser(user.uid).then( async (a) => {
     
                         if(a){
                             setCurrentUser(a as User)
+                            setLoading(false)
                         } else{
                             //create new user
                             let  userData= {
@@ -270,9 +283,11 @@ export const AuthProvider = (props: { children: string | number | boolean | Reac
                                     await setDoc(doc(db, "users", user.uid), userData);
                                     setCurrentUser(userData)
                                     navigate('/dashboard')
+                                    setLoading(false)
                                     
                                 
                             } catch (error) {
+                                setLoading(false)
                                 console.log(error)
                             }
                         }
